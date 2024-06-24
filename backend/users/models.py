@@ -19,6 +19,10 @@ class User(AbstractBaseUser, BaseModel):
         verbose_name = "User"
         verbose_name_plural = "Users"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(args, kwargs)
+        self.username = self.email
+
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -40,7 +44,7 @@ class Address(BaseModel):
 
 class Listing(BaseModel):
     title = models.CharField(max_length=255)
-    image = models.ImageField(upload_to="listings/")
+    image = models.ImageField(upload_to="listing_images/")
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
@@ -103,7 +107,7 @@ class Favorite(BaseModel):
         verbose_name_plural = "Favorites"
 
     def __str__(self):
-        return f"{self.user.username}'s favorite"
+        return f"{self.user.username} favorite"
 
 
 class Review(BaseModel):
