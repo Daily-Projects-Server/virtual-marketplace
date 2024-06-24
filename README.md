@@ -1,17 +1,5 @@
 # Virtual Marketplace
 
-## Models to be added
-- Users
-    - User Addresses
-    - User Settings
-    - User Favourites
-- Products
-    - Product images/media
-- Discount / Coupon Codes
-- Orders
-- Messages
-
-
 ## ⚙️ Setup
 
 ### Clone the Repo
