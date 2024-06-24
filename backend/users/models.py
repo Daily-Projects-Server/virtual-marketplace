@@ -40,11 +40,13 @@ class Address(BaseModel):
 
 class Listing(BaseModel):
     title = models.CharField(max_length=255)
+    image = models.ImageField(upload_to="listings/")
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
+    category = models.ForeignKey("Category", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Listing"
@@ -52,6 +54,31 @@ class Listing(BaseModel):
 
     def __str__(self):
         return self.title
+
+
+class Category(BaseModel):
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return self.name
+
+
+class Coupon(BaseModel):
+    code = models.CharField(max_length=255)
+    discount = models.DecimalField(max_digits=10, decimal_places=2)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Coupon"
+        verbose_name_plural = "Coupons"
+
+    def __str__(self):
+        return self.code
 
 
 class Cart(BaseModel):
