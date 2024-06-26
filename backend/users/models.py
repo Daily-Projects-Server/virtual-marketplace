@@ -7,10 +7,9 @@ from core.models import BaseModel
 class User(AbstractBaseUser, BaseModel):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=255)
-    address = models.ManyToManyField("Address", blank=True, related_name="user_addresses")
-    settings = models.OneToOneField("Settings", on_delete=models.CASCADE, related_name="user_settings")
+    email = models.EmailField(unique=True, null=False)
+    password = models.CharField(max_length=255, null=False)
+    settings = models.ForeignKey('Settings', on_delete=models.CASCADE, related_name="user_settings")
 
     # Specify the field that will be used as the unique identifier for the user
     USERNAME_FIELD = "email"
@@ -28,11 +27,10 @@ class User(AbstractBaseUser, BaseModel):
 
 
 class Address(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="address_user")
-    street = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    state = models.CharField(max_length=255)
-    zip_code = models.CharField(max_length=10)
+    street = models.CharField(max_length=255, null=False)
+    city = models.CharField(max_length=255, null=False)
+    state = models.CharField(max_length=255, null=False)
+    zip_code = models.CharField(max_length=10, null=False)
 
     class Meta:
         verbose_name = "Address"
@@ -40,6 +38,11 @@ class Address(BaseModel):
 
     def __str__(self):
         return f"{self.street}, {self.city}, {self.state} {self.zip_code}"
+
+
+class UserAddress(BaseModel):
+    user = models.ManyToManyField(to=User)
+    address = models.ManyToManyField(to=Address)
 
 
 class Favorite(BaseModel):
@@ -82,7 +85,7 @@ class Message(BaseModel):
 
 
 class Settings(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="settings_user")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="settings_user")
     dark_mode = models.BooleanField(default=False)
 
     class Meta:

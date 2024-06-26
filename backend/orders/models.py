@@ -6,7 +6,7 @@ class Transaction(BaseModel):
     buyer = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="buyer")
     seller = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="seller")
     listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=1, null=False)
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
@@ -19,8 +19,6 @@ class Transaction(BaseModel):
 
 class Cart(BaseModel):
     buyer = models.ForeignKey('users.User', on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    listings = models.ManyToManyField('listings.Listing')
 
     class Meta:
         verbose_name = "Order"
@@ -30,10 +28,16 @@ class Cart(BaseModel):
         return f"{self.buyer.username}'s cart"
 
 
+class CartItem(BaseModel):
+    cart = models.ManyToManyField(to=Cart)
+    listings = models.ManyToManyField(to='listings.Listing')
+    quantity = models.PositiveSmallIntegerField(default=1, null=False)
+
+
 class Coupon(BaseModel):
-    code = models.CharField(max_length=255)
-    discount = models.DecimalField(max_digits=10, decimal_places=2)
-    active = models.BooleanField(default=True)
+    code = models.CharField(max_length=255, null=False)
+    discount = models.DecimalField(max_digits=10, decimal_places=2, null=False)
+    active = models.BooleanField(default=True, null=False)
 
     class Meta:
         verbose_name = "Coupon"
