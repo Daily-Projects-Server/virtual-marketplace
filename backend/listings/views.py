@@ -1,8 +1,14 @@
 from django.shortcuts import render
-from django.http import HttpResponse
 from .models import *
+from .serializers import *
+from rest_framework import viewsets
 
 
-def index(request):
-    listings = Listing.objects.all()
-    return HttpResponse(request, listings)
+class ListingViewSet(viewsets.ModelViewSet):
+    queryset = Listing.objects.all()
+    serializer_class = ListingSerializer
+
+
+class CategoryViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
