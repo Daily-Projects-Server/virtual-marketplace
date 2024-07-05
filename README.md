@@ -17,6 +17,21 @@
 ### Setup `.env`
 > To access the secrets, create .env or rename .env.sample to .env
 
+### For Database setup
+By default, django is setup with `sqlite3`. For this project, set `DATABASE_URL` in your `.env` to set the database
+
+#### For sqlite3
+> DATABASE_URL="sqlite:////Path\\To\\Your\\Project\\db.sqlite3"
+
+Note that four `/` after `sqlite:` are mandatory
+
+*For windows users* -> `\\` after each folder is required
+
+#### For PostgreSQL
+> DATABASE_URL="postgres://username:password@HOSTNAME:PORT/DATABASE_NAME
+
+*Examples are given in `.env.sample`*
+
 ### Migrate the Database
 > `python manage.py migrate`
 
