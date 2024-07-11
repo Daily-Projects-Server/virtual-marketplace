@@ -1,7 +1,5 @@
 # Rest
-from rest_framework import viewsets, permissions, status, mixins
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework import viewsets, mixins, permissions
 
 # Local
 from .serializers import *
