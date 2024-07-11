@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
 # App views
@@ -11,10 +10,8 @@ router = routers.DefaultRouter()
 # Users
 router.register(r"users", UserViewSet)
 router.register(r"addresses", AddressViewSet)
-router.register(r"user-addresses", UserAddressViewSet)
 router.register(r"favorites", FavoriteViewSet)
 router.register(r"reviews", ReviewViewSet)
-router.register(r"messages", MessageViewSet)
 # Listings
 router.register(r"listings", ListingViewSet)
 router.register(r"categories", CategoryViewSet)

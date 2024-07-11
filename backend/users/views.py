@@ -1,34 +1,47 @@
-from django.shortcuts import render
-from django.contrib.auth import *
-from rest_framework import viewsets
+# Rest
+from rest_framework import viewsets, permissions, status, mixins
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
+# Local
 from .serializers import *
+from .permissions import *
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
-    serializer_class = AddressSerializer
+    serializers_class = AddressSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
-
-class UserAddressViewSet(viewsets.ModelViewSet):
-    queryset = UserAddress.objects.all()
-    serializer_class = UserAddressSerializer
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
-    serializer_class = FavoriteSerializer
+    serializers_class = FavoriteSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
-class ReviewViewSet(viewsets.ModelViewSet):
+class ReviewViewSet(mixins.CreateModelMixin,
+                    mixins.UpdateModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
     queryset = Review.objects.all()
-    serializer_class = ReviewSerializer
+    serializers_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        listing = self.request.data.get('listing')
+        serializer.save(user=self.request.user, listing=listing)
 
 
-class MessageViewSet(viewsets.ModelViewSet):
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
+# TODO: Message left

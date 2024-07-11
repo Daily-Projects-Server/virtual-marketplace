@@ -15,12 +15,6 @@ class AddressSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UserAddressSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserAddress
-        fields = "__all__"
-
-
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
