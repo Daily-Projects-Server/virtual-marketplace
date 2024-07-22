@@ -12,10 +12,10 @@ router.register(r"users", UserViewSet)
 router.register(r"addresses", AddressViewSet)
 router.register(r"favorites", FavoriteViewSet)
 router.register(r"reviews", ReviewViewSet)
-# Listings
+# # Listings
 router.register(r"listings", ListingViewSet)
 router.register(r"categories", CategoryViewSet)
-# Orders
+# # Orders
 router.register(r"transactions", TransactionViewSet)
 router.register(r"cart", CartViewSet)
 router.register(r"cart-items", CartItemViewSet)
@@ -24,5 +24,6 @@ router.register(r"coupons", CouponViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("", include('users.urls'))
+    # path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
 ]
