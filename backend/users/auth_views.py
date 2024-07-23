@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 
 from django.conf import settings
 
@@ -51,6 +52,7 @@ class RegisterView(APIView):
         try:
             serializer = RegisterSerializer(data=request.data, instance=settings.AUTH_USER_MODEL)
             serializer.is_valid(raise_exception=True)
+            serializer.save(created=datetime.now())
 
             RESPONSE_DATA = {
                 'message': "User register successfully",
