@@ -10,9 +10,6 @@ class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
     
-    def validate_empty_values(self, data):
-        return super().validate_empty_values(data)
-    
     def validate(self, data):
         email = data.get('email')
         password = data.get('password')            
@@ -27,15 +24,12 @@ class LoginSerializer(serializers.Serializer):
         data['user'] = user
         return data
     
-class RegisterSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    first_name = serializers.CharField()
-    last_name  = serializers.CharField()
-    password = serializers.CharField()
+class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField()
     
-    def validate_empty_values(self, data):
-        return super().validate_empty_values(data)
+    class Meta:
+        model = User
+        fields = ['email', 'first_name', 'last_name', 'password', 'confirm_password']
     
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -48,12 +42,17 @@ class RegisterSerializer(serializers.Serializer):
         confirm_password = data.get('confirm_password')
         
         if confirm_password != password:
-            serializers.ValidationError("Confirm password does not match with password")
+            raise serializers.ValidationError("Confirm password does not match with password")
             
         return data
     
     def create(self, validated_data):
-        return User.objects.create(**validated_data)
+        email = validated_data.pop('email')
+        password = validated_data.pop('password')
+        # remove confirm_password
+        validated_data.pop('confirm_password')
+        
+        return User.objects.create_user(email, password,**validated_data)
     
     
 class UserSerializer(serializers.ModelSerializer):
