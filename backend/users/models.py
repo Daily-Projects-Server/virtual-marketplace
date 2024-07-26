@@ -41,7 +41,6 @@ class User(AbstractBaseUser, BaseModel):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    settings = models.ForeignKey('Settings', on_delete=models.CASCADE, null=True, related_name="user_settings")
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -59,6 +58,12 @@ class User(AbstractBaseUser, BaseModel):
 
     def has_perms(self, perm_list, obj=None):
         return self.is_superuser
+
+    def save(self, *args, **kwargs):
+        self.email = self.email.lower()
+        instance = super(User, self).save(*args, **kwargs)
+        Settings.objects.create(user_id=self.id)
+        return instance
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -121,7 +126,7 @@ class Message(BaseModel):
 
 
 class Settings(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="settings_user")
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     dark_mode = models.BooleanField(default=False)
 
     class Meta:
