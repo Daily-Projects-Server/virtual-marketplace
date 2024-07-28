@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import APIException
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 from .serializers import LoginSerializer, RegisterSerializer
 from core.common import responseMessages
@@ -17,7 +19,7 @@ from core.common import responseMessages
 
 logger = logging.getLogger('django')
 
-__all__ = ['LoginView', 'RegisterView']
+__all__ = ['LoginView', 'RegisterView', 'RefreshTokenView']
 
 @method_decorator(sensitive_post_parameters('password'), name="dispatch")
 class LoginView(APIView):
@@ -42,7 +44,7 @@ class LoginView(APIView):
         
         except APIException as exe:
             logger.error(str(exe), exc_info=True)
-            raise APIException(exe)
+            raise APIException(exe.detail)
         
 
 @method_decorator(sensitive_post_parameters('password', 'confirm_password'), name="dispatch")
@@ -66,4 +68,31 @@ class RegisterView(APIView):
             logger.error(str(exe), exc_info=True)
             raise APIException(exe.detail)
             
+
+
+class RefreshTokenView(TokenRefreshView):
+    """ overriding default refresh token view
+    """
+    def post(self, request, *args, **kwargs):
+        try:
+            cookie = request.headers.get('Cookie')
+            refresh_token = cookie.split('refresh_token=')[1]
+
+            serializer = super().get_serializer(data={'refresh': refresh_token})
+            try:
+               serializer.is_valid(raise_exception=True)
+            except TokenError as e:
+                raise InvalidToken(e.args[0])
+
+            RESPONSE_DATA = {
+            'response': responseMessages.SUCCESS_RESPONSE_MESSAGE,
+            'access_token': serializer.validated_data.get('access')
+            }
+            response = Response(RESPONSE_DATA, status=status.HTTP_200_OK)
+            response.set_cookie('refresh_token', serializer.validated_data.get('refresh'), httponly=True) 
+            return response
+        
+        except APIException as exe:
+            logger.error(str(exe), exc_info=True)
+            raise APIException(exe.detail)
     
