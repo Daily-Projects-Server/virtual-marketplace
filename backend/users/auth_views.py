@@ -8,13 +8,16 @@ from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import APIException
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
+# from rest_framework_simplejwt.serializers import  TokenBlacklistSerializer
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
 from .serializers import LoginSerializer, RegisterSerializer
 from core.common import responseMessages
+from core.common.globalFunctions import handle_success_response, get_refresh_token
 
 
 logger = logging.getLogger('django')
@@ -75,10 +78,9 @@ class RefreshTokenView(TokenRefreshView):
     """
     def post(self, request, *args, **kwargs):
         try:
-            cookie = request.headers.get('Cookie')
-            refresh_token = cookie.split('refresh_token=')[1]
-
+            refresh_token = get_refresh_token(request)
             serializer = super().get_serializer(data={'refresh': refresh_token})
+
             try:
                serializer.is_valid(raise_exception=True)
             except TokenError as e:
@@ -95,4 +97,20 @@ class RefreshTokenView(TokenRefreshView):
         except APIException as exe:
             logger.error(str(exe), exc_info=True)
             raise APIException(exe.detail)
-    
+        
+
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, format=None):
+        try:
+            token = get_refresh_token(request)
+            old_refresh = RefreshToken(token)
+            old_refresh.blacklist()
+            return handle_success_response(None, 'User logout successfully.')
+        
+        except APIException as exe: 
+            logger.error(str(exe), exc_info=True)
+            raise APIException(exe.detail)
+        
