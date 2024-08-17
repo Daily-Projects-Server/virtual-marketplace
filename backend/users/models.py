@@ -17,6 +17,7 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -41,6 +42,7 @@ class User(AbstractBaseUser, BaseModel):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    settings = models.ForeignKey('Settings', on_delete=models.CASCADE, null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -59,10 +61,30 @@ class User(AbstractBaseUser, BaseModel):
     def has_perms(self, perm_list, obj=None):
         return self.is_superuser
 
+    # Assign the default settings to the user, so they don't have to create a new one each time
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # get_or_create returns a tuple, so we need to get the first element
+        self.settings = Settings.objects.get_or_create(id=1)[0]
+
     def save(self, *args, **kwargs):
         self.email = self.email.lower()
         instance = super(User, self).save(*args, **kwargs)
-        Settings.objects.create(user_id=self.id)
+
+        default_settings = Settings.objects.get(id=1)
+        # Check if the user's settings differ from the default settings
+        fields_differ = any(
+            getattr(self.settings, field.name) != getattr(default_settings, field.name)
+            for field in Settings._meta.get_fields())
+
+        # If the settings differ, create a new settings object for the user
+        if fields_differ:
+            new_settings = Settings.objects.create(
+                **{field.name: getattr(self.settings, field.name) for field in Settings._meta.get_fields()}
+            )
+            self.settings = new_settings
+        else:
+            self.settings = default_settings
         return instance
 
     def __str__(self):
@@ -126,7 +148,6 @@ class Message(BaseModel):
 
 
 class Settings(BaseModel):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     dark_mode = models.BooleanField(default=False)
 
     class Meta:
@@ -134,4 +155,4 @@ class Settings(BaseModel):
         verbose_name_plural = "Settings"
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}'s settings"
+        return f"{self.dark_mode}"
