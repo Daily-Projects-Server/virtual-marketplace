@@ -77,6 +77,7 @@ class TestUserModel:
         assert settings.count() == 1
 
     # TODO: Fix this test
+    # The shitty save function updates the old settings instance instead of the new one
     @pytest.mark.django_db
     def test_if_settings_instance_is_created_when_user_change_settings(self):
         user = User.objects.create_user(email="TEST@EXAMPLE.COM", password="password123", first_name="John",
@@ -84,3 +85,7 @@ class TestUserModel:
         user.settings.dark_mode = True
         user.save()
         assert Settings.objects.count() == 2
+        assert user.settings.id == 2
+        assert Settings.objects.get(id=1).dark_mode is False
+        assert Settings.objects.get(id=2).dark_mode is True
+        assert user.settings.dark_mode is True
