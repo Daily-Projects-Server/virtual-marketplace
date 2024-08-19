@@ -1,9 +1,9 @@
 # Rest
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import viewsets, mixins
 
 # Local
-from .serializers import *
 from .permissions import *
+from .serializers import *
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
