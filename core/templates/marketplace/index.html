@@ -1,0 +1,21 @@
+<!-- core/templates/marketplace/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Marketplace Listings</title>
+</head>
+<body>
+    <h1>Active Listings</h1>
+    <ul>
+        {% for listing in listings %}
+            <li>
+                <h2>{{ listing.title }}</h2>
+                <p>{{ listing.description }}</p>
+                <p>Price: ${{ listing.price }}</p>
+            </li>
+        {% empty %}
+            <li>No active listings available.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
