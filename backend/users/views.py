@@ -40,6 +40,3 @@ class ReviewViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer):
         listing = self.request.data.get('listing')
         serializer.save(user=self.request.user, listing=listing)
-
-
-# TODO: Message left

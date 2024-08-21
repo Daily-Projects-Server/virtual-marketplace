@@ -17,6 +17,7 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
         return user
 
     def create_superuser(self, email, password, **extra_fields):
@@ -41,7 +42,7 @@ class User(AbstractBaseUser, BaseModel):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    settings = models.ForeignKey('Settings', on_delete=models.CASCADE, null=True, related_name="user_settings")
+    settings = models.ForeignKey('Settings', on_delete=models.CASCADE, null=True, blank=True, unique=False)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -59,6 +60,36 @@ class User(AbstractBaseUser, BaseModel):
 
     def has_perms(self, perm_list, obj=None):
         return self.is_superuser
+
+    def save(self, *args, **kwargs):
+        self.email = self.email.lower()
+
+        # Ensure the user's settings are set
+        if not self.settings:
+            self.settings = Settings.objects.get_or_create(id=1)[0]
+
+        instance = super(User, self).save(*args, **kwargs)
+
+        default_settings = Settings.objects.get(id=1)
+        fields = [field for field in Settings._meta.get_fields()
+                  if field.concrete
+                  and not field.many_to_many
+                  and field is not Settings._meta.pk]
+
+        # Check if the user's settings differ from the default settings
+        fields_differ = any(
+            getattr(self.settings, field.name) != getattr(default_settings, field.name)
+            for field in fields)
+
+        # If the settings differ, create a new settings object for the user
+        if fields_differ:
+            new_settings = Settings.objects.create(
+                **{field.name: getattr(self.settings, field.name) for field in fields}
+            )
+            self.settings = new_settings
+            super(User, self).save(*args, **kwargs)
+
+        return instance
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -121,7 +152,6 @@ class Message(BaseModel):
 
 
 class Settings(BaseModel):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="settings_user")
     dark_mode = models.BooleanField(default=False)
 
     class Meta:
@@ -129,4 +159,4 @@ class Settings(BaseModel):
         verbose_name_plural = "Settings"
 
     def __str__(self):
-        return f"{self.user.first_name} {self.user.last_name}'s settings"
+        return f"{self.dark_mode}"
