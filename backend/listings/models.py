@@ -1,6 +1,9 @@
 from django.db import models
 from rest_framework.exceptions import ValidationError
+<<<<<<< HEAD
 from django.conf import settings
+=======
+>>>>>>> upstream/main
 
 from core.models import BaseModel
 
@@ -58,6 +61,7 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+<<<<<<< HEAD
 
 class Favorite(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
@@ -70,3 +74,5 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.email} - {self.listing.title}"
+=======
+>>>>>>> upstream/main

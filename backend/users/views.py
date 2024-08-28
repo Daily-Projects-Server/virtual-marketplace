@@ -13,7 +13,11 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
+<<<<<<< HEAD
     serializer_class = AddressSerializer
+=======
+    serializers_class = AddressSerializer
+>>>>>>> upstream/main
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
@@ -22,7 +26,11 @@ class AddressViewSet(viewsets.ModelViewSet):
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
+<<<<<<< HEAD
     serializer_class = FavoriteSerializer
+=======
+    serializers_class = FavoriteSerializer
+>>>>>>> upstream/main
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
