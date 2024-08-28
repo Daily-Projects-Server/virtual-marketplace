@@ -25,18 +25,19 @@ class LoginSerializer(serializers.Serializer):
         return data
 
 
+def validate_email(value):
+    if User.objects.filter(email=value).exists():
+        raise serializers.ValidationError('Email already exits')
+
+    return value
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField()
 
     class Meta:
         model = User
         fields = ['email', 'first_name', 'last_name', 'password', 'confirm_password']
-
-    def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
-            raise serializers.ValidationError('Email already exits')
-
-        return value
 
     def validate(self, data):
         password = data.get('password')

@@ -6,15 +6,27 @@ User = get_user_model()
 
 
 class TestUserModel:
-    @pytest.mark.django_db
-    def test_create_user_with_valid_data(self):
-        user = User.objects.create_user(email="test@example.com", password="password123", first_name="John",
+    @pytest.fixture()
+    def test_user(self, request):
+        user = User.objects.create_user(email="TEST@EXAMPLE.COM", password="password123", first_name="John",
                                         last_name="Doe")
-        assert user.email == "test@example.com"
-        assert user.check_password("password123")
-        assert user.first_name == "John"
-        assert user.last_name == "Doe"
-        assert user.settings is not None
+        request.addfinalizer(user.delete)
+        return user
+
+    @pytest.fixture()
+    def test_superuser(self, request):
+        superuser = User.objects.create_superuser(email="admin@example.com", password="admin123", first_name="Admin",
+                                                  last_name="User")
+        request.addfinalizer(superuser.delete)
+        return superuser
+
+    @pytest.mark.django_db
+    def test_create_user_with_valid_data(self, test_user):
+        assert test_user.email == "test@example.com"
+        assert test_user.check_password("password123")
+        assert test_user.first_name == "John"
+        assert test_user.last_name == "Doe"
+        assert test_user.settings is not None
 
     @pytest.mark.django_db
     def test_create_user_without_email_raises_error(self):
@@ -27,11 +39,9 @@ class TestUserModel:
             User.objects.create_user(email="test@example.com", password="")
 
     @pytest.mark.django_db
-    def test_create_superuser_with_valid_data(self):
-        superuser = User.objects.create_superuser(email="admin@example.com", password="admin123", first_name="Admin",
-                                                  last_name="User")
-        assert superuser.is_staff
-        assert superuser.is_superuser
+    def test_create_superuser_with_valid_data(self, test_superuser):
+        assert test_superuser.is_staff
+        assert test_superuser.is_superuser
 
     @pytest.mark.django_db
     def test_create_superuser_without_is_staff_raises_error(self):
@@ -44,29 +54,21 @@ class TestUserModel:
             User.objects.create_superuser(email="admin@example.com", password="admin123", is_superuser=False)
 
     @pytest.mark.django_db
-    def test_user_has_perm_returns_true_for_superuser(self):
-        superuser = User.objects.create_superuser(email="admin@example.com", password="admin123", first_name="Admin",
-                                                  last_name="User")
-        assert superuser.has_perm("any_perm")
+    def test_user_has_perm_returns_true_for_superuser(self, test_superuser):
+        assert test_superuser.has_perm("any_perm")
 
     @pytest.mark.django_db
-    def test_user_has_perms_returns_true_for_superuser(self):
-        superuser = User.objects.create_superuser(email="admin@example.com", password="admin123", first_name="Admin",
-                                                  last_name="User")
-        assert superuser.has_perms(["perm1", "perm2"])
+    def test_user_has_perms_returns_true_for_superuser(self, test_superuser):
+        assert test_superuser.has_perms(["perm1", "perm2"])
 
     @pytest.mark.django_db
-    def test_user_email_is_lowercase_on_save(self):
-        user = User.objects.create_user(email="TEST@EXAMPLE.COM", password="password123", first_name="John",
-                                        last_name="Doe")
-        assert user.email == "test@example.com"
+    def test_user_email_is_lowercase_on_save(self, test_user):
+        assert test_user.email == "test@example.com"
 
     @pytest.mark.django_db
-    def test_user_has_default_settings(self):
-        user = User.objects.create_user(email="TEST@EXAMPLE.COM", password="password123", first_name="John",
-                                        last_name="Doe")
-        assert user.settings is not None
-        assert user.settings.dark_mode is False
+    def test_user_has_default_settings(self, test_user):
+        assert test_user.settings is not None
+        assert test_user.settings.dark_mode is False
 
     @pytest.mark.django_db
     def test_total_number_of_settings_instances_are_one_when_all_users_have_default_settings(self):
@@ -76,16 +78,32 @@ class TestUserModel:
         settings = Settings.objects.all()
         assert settings.count() == 1
 
-    # TODO: Fix this test
-    # The shitty save function updates the old settings instance instead of the new one
     @pytest.mark.django_db
-    def test_if_settings_instance_is_created_when_user_change_settings(self):
-        user = User.objects.create_user(email="TEST@EXAMPLE.COM", password="password123", first_name="John",
-                                        last_name="Doe")
-        user.settings.dark_mode = True
-        user.save()
+    def test_if_settings_instance_is_created_when_user_change_settings(self, test_user):
+        test_user.settings.dark_mode = True
+        test_user.save()
         assert Settings.objects.count() == 2
-        assert user.settings.id == 2
+        assert test_user.settings.id == 2
         assert Settings.objects.get(id=1).dark_mode is False
         assert Settings.objects.get(id=2).dark_mode is True
-        assert user.settings.dark_mode is True
+        assert test_user.settings.dark_mode is True
+
+    @pytest.mark.django_db
+    def test_if_settings_instance_is_not_deleted_when_user_is_deleted(self, test_user):
+        test_user = User.objects.create_user(email="test@test.com", password="password123")
+        test_user.delete()
+        assert Settings.objects.count() == 1
+
+
+class TestUserViews:
+    @pytest.fixture()
+    def test_user(self, request):
+        user = User.objects.create_user(email="test@test.com", password="password123")
+        request.addfinalizer(user.delete)
+        return user
+
+    # Fix that shit
+    @pytest.mark.django_db
+    def test_user_can_login(self, test_user, client):
+        response = client.post('/register/')
+        assert response.status_code == 200
