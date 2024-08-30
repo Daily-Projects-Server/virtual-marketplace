@@ -1,23 +1,18 @@
-<div>
-  <div class="card flex justify-content-center">
-    <p-menu [model]="items">
-      <ng-template pTemplate="item" let-item>
-        <ng-container *ngIf="item.route; else elseBlock">
-          <a [routerLink]="item.route" class="p-menuitem-link">
-            <span [class]="item.icon"></span>
-            <span class="ml-2">{{ item.label }}</span>
-          </a>
-        </ng-container>
-        <ng-template #elseBlock>
-          <a [href]="item.url" class="p-menuitem-link">
-            <span [class]="item.icon"></span>
-            <span class="ml-2">{{ item.label }}</span>
-          </a>
-        </ng-template>
+<div class="card flex justify-content-center">
+  <p-menu [model]="items">
+    <ng-template pTemplate="item" let-item>
+      <ng-container *ngIf="item.route; else elseBlock">
+        <a [routerLink]="item.route" class="p-menuitem-link">
+          <span [class]="item.icon"></span>
+          <span class="ml-2">{{ item.label }}</span>
+        </a>
+      </ng-container>
+      <ng-template #elseBlock>
+        <a [href]="item.url" class="p-menuitem-link">
+          <span [class]="item.icon"></span>
+          <span class="ml-2">{{ item.label }}</span>
+        </a>
       </ng-template>
-    </p-menu>
-  </div>
-  <div class="main-layout-content">
-    <router-outlet></router-outlet>
-  </div>
+    </ng-template>
+  </p-menu>
 </div>
