@@ -1,8 +1,21 @@
-<div class="main-layout-wrapper">
-  <div class="main-layout-navigation">
-    Navigation:
-    <a [routerLink]="['/component-a']">Component-A</a><br />
-    <a [routerLink]="['/component-b']">Component-B</a>
+<div>
+  <div class="card flex justify-content-center">
+    <p-menu [model]="items">
+      <ng-template pTemplate="item" let-item>
+        <ng-container *ngIf="item.route; else elseBlock">
+          <a [routerLink]="item.route" class="p-menuitem-link">
+            <span [class]="item.icon"></span>
+            <span class="ml-2">{{ item.label }}</span>
+          </a>
+        </ng-container>
+        <ng-template #elseBlock>
+          <a [href]="item.url" class="p-menuitem-link">
+            <span [class]="item.icon"></span>
+            <span class="ml-2">{{ item.label }}</span>
+          </a>
+        </ng-template>
+      </ng-template>
+    </p-menu>
   </div>
   <div class="main-layout-content">
     <router-outlet></router-outlet>

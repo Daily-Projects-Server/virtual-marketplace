@@ -1,16 +1,10 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+::ng-deep .p-submenu-header {
+  color: black;
+}
+::ng-deep .p-menuitem {
+  padding-left: 1rem;
 }
 
-.main-layout-wrapper {
-  flex-grow: 1;
-  display: flex;
-  width: 100%;
-
-  .main-layout-navigation {
-    width: 150px;
-    background-color: #dddddd;
-  }
+::ng-deep .p-menuitem-content > a:nth-child(1) {
+  display: none;
 }
