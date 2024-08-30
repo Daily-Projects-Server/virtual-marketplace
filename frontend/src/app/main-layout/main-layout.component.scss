@@ -3,13 +3,3 @@
   flex-direction: column;
   height: 100vh;
 }
-.main-layout-wrapper {
-  flex-grow: 1;
-  display: flex;
-  width: 100%;
-
-  .main-layout-navigation {
-    width: 150px;
-    background-color: #dddddd;
-  }
-}
