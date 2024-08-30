@@ -1,17 +1,4 @@
-<div class="main-layout-header">
-  Header
+<app-header></app-header>
+<div class="main-content">
+  <app-sidebar></app-sidebar> <router-outlet></router-outlet>
 </div>
-<div class="main-layout-wrapper">
-  <div class="main-layout-navigation">
-    Navigation:
-    <a [routerLink]="['/component-a']">Component-A</a><br>
-    <a [routerLink]="['/component-b']">Component-B</a>
-  </div>
-  <div class="main-layout-content">
-    <router-outlet></router-outlet>
-  </div>
-</div>
-
-
-
-

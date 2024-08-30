@@ -1,0 +1,10 @@
+::ng-deep .p-submenu-header {
+  color: black;
+}
+::ng-deep .p-menuitem {
+  padding-left: 1rem;
+}
+
+::ng-deep .p-menuitem-content > a:nth-child(1) {
+  display: none;
+}
