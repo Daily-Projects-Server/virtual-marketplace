@@ -20,7 +20,7 @@ def category(db):
 
 #Model tests
 @pytest.mark.django_db
-def test_listing_model(owner, category):
+def test_listing_model(self, owner, category):
     listing = Listing(
         title="Test Listing",
         image="listing_images/test.jpg",
@@ -42,7 +42,7 @@ def test_listing_model(owner, category):
     assert listing.category.description == "Test Description"
 
 @pytest.mark.django_db
-def test_listing_clean(owner, category):
+def test_listing_clean(self, owner, category):
     listing = Listing(
         title="Test Listing",
         image="listing_images/test.jpg",
@@ -56,7 +56,7 @@ def test_listing_clean(owner, category):
         listing.clean()
 
 @pytest.mark.django_db
-def test_listing_save(owner, category):
+def test_listing_save(self, owner, category):
     listing = Listing(
         title="Test Listing",
         image="listing_images/test.jpg",
@@ -73,7 +73,7 @@ def test_listing_save(owner, category):
     assert listing.active is True
 
 @pytest.mark.django_db
-def test_owner_having_multiple_listings(owner, category):
+def test_owner_having_multiple_listings(self, owner, category):
     listing1 = Listing(
         title="Test Listing 1",
         image="listing_images/test1.jpg",
