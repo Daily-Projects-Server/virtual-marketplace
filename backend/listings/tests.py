@@ -1,9 +1,11 @@
 import pytest
-
 from users.models import User
 from rest_framework.exceptions import ValidationError
-
 from listings.models import Listing, Category
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APIClient
+from django.contrib.auth import get_user_model
 
 
 class TestListingsModels:
@@ -94,3 +96,31 @@ class TestListingsModels:
         )
         listing2.save()
         assert Listing.objects.filter(owner_id=owner.id).count() == 2
+
+    @pytest.fixture
+    def client():
+        return APIClient()
+
+    def test_update_listing(client, user, listing):
+        client.login(email="owner@example.com", password="password123")
+        url = reverse('listing-detail', kwargs={'pk': listing.id})
+        data = {
+            "title": "Updated Title",
+            "description": "Updated Description",
+            "price": 150.00
+        }
+        response = client.patch(url, data)
+        listing.refresh_from_db()
+        assert response.status_code == status.HTTP_200_OK
+        assert listing.title == "Updated Title"
+        assert listing.description == "Updated Description"
+        assert listing.price == 150.00
+
+    def test_update_listing_non_owner(client, another_user, listing):
+        client.login(email="nonowner@example.com", password="password456")
+        url = reverse('listing-detail', kwargs={'pk': listing.id})
+        data = {
+            "title": "Attempted Update Title"
+        }
+        response = client.patch(url, data)
+        assert response.status_code == status.HTTP_403_FORBIDDEN
