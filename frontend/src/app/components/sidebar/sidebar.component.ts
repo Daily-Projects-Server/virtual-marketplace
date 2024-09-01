@@ -1,5 +1,5 @@
 import { MenuItem } from 'primeng/api';
-import { MenuModule } from 'primeng/menu';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
@@ -8,7 +8,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink, MenuModule],
+  imports: [CommonModule, RouterOutlet, RouterLink, TieredMenuModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -16,17 +16,12 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class SidebarComponent {
   items: MenuItem[] = [
     {
-      label: 'Navigation',
-      items: [
-        {
-          label: 'Component A',
-          route: '/component-a',
-        },
-        {
-          label: 'Component B',
-          route: '/component-b',
-        },
-      ],
+      label: 'Component A',
+      route: '/component-a',
+    },
+    {
+      label: 'Component B',
+      route: '/component-b',
     },
     {
       label: 'Products',
