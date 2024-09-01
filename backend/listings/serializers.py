@@ -6,7 +6,8 @@ from .models import *
 class ListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Listing
-        fields = "__all__"
+        fields = ['title', 'description', 'price', 'category']  # Specify editable fields
+        read_only_fields = ['id', 'owner', 'created_at', 'status']  # Mark non-editable fields as read-only
 
     def validate_price(self, value):
         if value < 0:
