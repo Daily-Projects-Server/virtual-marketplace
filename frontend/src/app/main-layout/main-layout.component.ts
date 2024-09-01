@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { HeaderComponent } from '../components/header';
-import { SidebarComponent } from '../components/sidebar';
+import { SidebarComponent } from './sidebar';
 
 @Component({
   selector: 'app-main-layout',
