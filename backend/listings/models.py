@@ -58,6 +58,7 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+      
 
 class Favorite(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
