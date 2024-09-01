@@ -19,10 +19,10 @@ from .serializers import LoginSerializer, RegisterSerializer
 from core.common import responseMessages
 from core.common.globalFunctions import handle_success_response, get_refresh_token
 
-
 logger = logging.getLogger('django')
 
 __all__ = ['LoginView', 'RegisterView', 'RefreshTokenView']
+
 
 @method_decorator(sensitive_post_parameters('password'), name="dispatch")
 class LoginView(APIView):
@@ -73,6 +73,7 @@ class RegisterView(APIView):
 class RefreshTokenView(TokenRefreshView):
     """ overriding default refresh token view
     """
+
     def post(self, request, *args, **kwargs):
         try:
             refresh_token = get_refresh_token(request)
@@ -84,8 +85,8 @@ class RefreshTokenView(TokenRefreshView):
                 raise InvalidToken(e.args[0])
 
             RESPONSE_DATA = {
-            'response': responseMessages.SUCCESS_RESPONSE_MESSAGE,
-            'access_token': serializer.validated_data.get('access')
+                'response': responseMessages.SUCCESS_RESPONSE_MESSAGE,
+                'access_token': serializer.validated_data.get('access')
             }
             response = Response(RESPONSE_DATA, status=status.HTTP_200_OK)
             response.set_cookie(

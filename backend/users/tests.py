@@ -105,9 +105,8 @@ class TestUserViews:
         request.addfinalizer(user.delete)
         return user
 
-    # Fix that shit
     @pytest.mark.django_db
-    def test_user_can_login(self, test_user, client):
+    def test_user_can_register(self, test_user, client):
         response = client.post('/register/')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -120,3 +119,15 @@ class TestUserViews:
         }
         response = client.post("/register/", data=data)
         assert response.status_code == status.HTTP_201_CREATED
+
+    @pytest.mark.django_db
+    def test_user_can_login(self, test_user, client):
+        response = client.post('/login/')
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+        data = {
+            "email": test_user.email,
+            "password": test_user.password,
+        }
+        response = client.post('/login/', data=data)
+        assert response.status_code == status.HTTP_200_OK

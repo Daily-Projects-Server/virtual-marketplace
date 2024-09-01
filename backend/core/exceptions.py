@@ -7,6 +7,7 @@ from rest_framework_simplejwt.exceptions import InvalidToken
 
 logger = logging.getLogger(__name__)
 
+
 def custom_exception_handler(exc, context):
     # Call the default exception handler to get the standard error response
     response = exception_handler(exc, context)
@@ -14,7 +15,7 @@ def custom_exception_handler(exc, context):
     # Log the exception for debugging
     if response is not None:
         logger.error(f"Exception occurred: {exc}")
-        
+
         # Customize responses based on status codes
         if response.status_code == status.HTTP_401_UNAUTHORIZED:
             response.data = {
@@ -51,5 +52,5 @@ def custom_exception_handler(exc, context):
                 'error': 'Invalid Token',
                 'message': 'The provided token is invalid or expired. Please refresh the token or log in again.'
             }
-    
+
     return response
