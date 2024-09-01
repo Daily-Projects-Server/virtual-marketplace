@@ -13,27 +13,33 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+import environ
 
-from environ import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Initialize environment variables
 env = environ.Env()
-environ.Env.read_env()
+
+# Read .env file
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), '..', '.env'))  # This will automatically read the .env file in the backend directory
+
+# Use environment variables
+SECRET_KEY = env('SECRET_KEY')
+DEBUG = env.bool('DEBUG', default=False)
+
+# Database configuration
+DATABASES = {
+    'default': env.db(),  # This pulls the database configuration from the DATABASE_URL in .env
+}
 
 env.escape_proxy = True
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str("SECRET_KEY")
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] #This is safe and convenient for testing locally (Development Environment). In a production environment, you should include the domain names or IP addresses where your application will be hosted. Using a wildcard is not recommended for production environments because it makes your site more vulnerable to HTTP Host header attacks.
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool("DEBUG", default=False)
-
-ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -70,9 +76,17 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": [
-       "rest_framework_simplejwt.authentication.JWTAuthentication"
-    ]
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",  # This is the correct placement
 }
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+}
+
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -103,13 +117,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "api.wsgi.application"
-
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {"default": env.db()}
-
 
 AUTH_USER_MODEL = "users.User"
 

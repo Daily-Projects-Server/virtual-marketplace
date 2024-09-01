@@ -14,3 +14,4 @@ sqlparse==0.5.1
 tomli==2.0.1
 typing_extensions==4.12.2
 pytest-django
+django-environ==0.11.2
