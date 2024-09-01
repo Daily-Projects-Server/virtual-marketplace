@@ -4,21 +4,6 @@
   height: 100vh;
 }
 
-.main-layout-header {
+.main-content {
   display: flex;
-  justify-content: center;
-  background-color: #CCCCCC;
-  height: 100px
-}
-
-.main-layout-wrapper {
-  flex-grow: 1;
-  display: flex;
-  width: 100%;
-
-  .main-layout-navigation {
-    width: 150px;
-    background-color: #DDDDDD;
-  }
-
 }
