@@ -10,12 +10,13 @@
 
 ### Setup Virtual Environment
 `python -m venv <VENV_NAME>`
+> if you are on Linux you can activate it with `source venv/bin/activate`
 
 ### Install dependencies
 > pip install -r requirements.txt
 
 ### Setup `.env`
-> To access the secrets, create .env or rename .env.sample to .env
+> To access the secrets, create an .env file in the backend directory
 
 ### For Database setup
 By default, django is setup with `sqlite3`. For this project, set `DATABASE_URL` in your `.env` to set the database
