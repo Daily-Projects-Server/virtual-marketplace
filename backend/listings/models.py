@@ -14,6 +14,13 @@ class Listing(BaseModel):
     owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)  # Track when the listing was created
+    STATUS_CHOICES = [
+        ('active', 'Active'),
+        ('sold', 'Sold'),
+        ('archived', 'Archived'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')  # Track the status of the listing
 
     class Meta:
         verbose_name = "Listing"

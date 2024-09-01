@@ -38,7 +38,8 @@ env.escape_proxy = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] #This is safe and convenient for testing locally (Development Environment). In a production environment, you should include the domain names or IP addresses where your application will be hosted. Using a wildcard is not recommended for production environments because it makes your site more vulnerable to HTTP Host header attacks.
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+SITE_ID = 1
 
 
 
@@ -205,3 +206,6 @@ LOGGING = {
         },
     },
 }
+
+
+
