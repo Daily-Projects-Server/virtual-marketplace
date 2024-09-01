@@ -1,5 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
+
+from rest_framework import status
+
 from .models import Settings
 
 User = get_user_model()
@@ -106,4 +109,14 @@ class TestUserViews:
     @pytest.mark.django_db
     def test_user_can_login(self, test_user, client):
         response = client.post('/register/')
-        assert response.status_code == 200
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+        data = {
+            "first_name": "test",
+            "last_name": "name",
+            "password": "arandompassword@4320",
+            "confirm_password": "arandompassword@4320",
+            "email": "test@email.com",
+        }
+        response = client.post("/register/", data=data)
+        assert response.status_code == status.HTTP_201_CREATED
