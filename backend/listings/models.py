@@ -1,4 +1,7 @@
 from django.db import models
+from rest_framework.exceptions import ValidationError
+from django.conf import settings
+
 from core.models import BaseModel
 
 
@@ -16,6 +19,31 @@ class Listing(BaseModel):
         verbose_name = "Listing"
         verbose_name_plural = "Listings"
 
+    def clean(self):
+        if self.price < 0:
+            raise ValidationError("Price cannot be negative")
+        if self.quantity < 0:
+            raise ValidationError("Quantity cannot be negative")
+        if self.owner is None:
+            raise ValidationError("Owner is required")
+
+    def close_listings(self):
+        self.active = False
+
+    def activate_listings(self):
+        self.active = True
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        instance = super().save(*args, **kwargs)
+
+        if self.quantity == 0:
+            self.close_listings()
+        elif self.quantity > 0 and not self.active:
+            self.activate_listings()
+
+        return instance
+
     def __str__(self):
         return self.title
 
@@ -30,3 +58,16 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+      
+
+class Favorite(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites')
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='favorited_by')
+
+    class Meta:
+        unique_together = ('user', 'listing')
+        verbose_name = "Favorite"
+        verbose_name_plural = "Favorites"
+
+    def __str__(self):
+        return f"{self.user.email} - {self.listing.title}"

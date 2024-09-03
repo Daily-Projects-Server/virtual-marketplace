@@ -1,9 +1,9 @@
 # Rest
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import viewsets, mixins
 
 # Local
-from .serializers import *
 from .permissions import *
+from .serializers import *
 
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
@@ -13,7 +13,8 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
-    serializers_class = AddressSerializer
+    serializer_class = AddressSerializer
+
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
@@ -22,7 +23,7 @@ class AddressViewSet(viewsets.ModelViewSet):
 
 class FavoriteViewSet(viewsets.ModelViewSet):
     queryset = Favorite.objects.all()
-    serializers_class = FavoriteSerializer
+    serializer_class = FavoriteSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
     def perform_create(self, serializer):
@@ -40,6 +41,3 @@ class ReviewViewSet(mixins.CreateModelMixin,
     def perform_create(self, serializer):
         listing = self.request.data.get('listing')
         serializer.save(user=self.request.user, listing=listing)
-
-
-# TODO: Message left

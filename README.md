@@ -10,6 +10,28 @@
 
 ### Setup Virtual Environment
 `python -m venv <VENV_NAME>`
+> if you are on Linux you can activate it with `source venv/bin/activate`
+
+### Install dependencies
+> pip install -r requirements.txt
+
+### Setup `.env`
+> To access the secrets, create an .env file in the backend directory
+
+### For Database setup
+By default, django is setup with `sqlite3`. For this project, set `DATABASE_URL` in your `.env` to set the database
+
+#### For sqlite3
+> DATABASE_URL="sqlite:////Path\\To\\Your\\Project\\db.sqlite3"
+
+Note that four `/` after `sqlite:` are mandatory
+
+*For windows users* -> `\\` after each folder is required
+
+#### For PostgreSQL
+> DATABASE_URL="postgres://username:password@HOSTNAME:PORT/DATABASE_NAME
+
+*Examples are given in `.env.sample`*
 
 ### Install dependencies
 > pip install -r requirements.txt
