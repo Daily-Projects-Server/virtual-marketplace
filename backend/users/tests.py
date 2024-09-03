@@ -2,7 +2,10 @@ import pytest
 from django.contrib.auth import get_user_model
 
 from rest_framework import status
+from rest_framework.test import APIClient
+from rest_framework_simplejwt.exceptions import TokenError
 
+from listings.models import Listing, Category
 from .models import Settings
 
 User = get_user_model()
@@ -106,7 +109,9 @@ class TestUserViews:
         return user
 
     @pytest.mark.django_db
-    def test_user_can_register(self, test_user, client):
+    def test_user_can_register(self, test_user):
+        client = APIClient()
+
         response = client.post('/register/')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
@@ -121,13 +126,119 @@ class TestUserViews:
         assert response.status_code == status.HTTP_201_CREATED
 
     @pytest.mark.django_db
-    def test_user_can_login(self, test_user, client):
+    def test_user_can_login(self, test_user):
+        client = APIClient()
+
         response = client.post('/login/')
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
         data = {
             "email": test_user.email,
-            "password": test_user.password,
+            "password": "password123",
         }
         response = client.post('/login/', data=data)
         assert response.status_code == status.HTTP_200_OK
+
+        data["password"] = "wrong-password"
+        response = client.post('/login/', data=data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    @pytest.mark.django_db
+    def test_user_can_logout(self, test_user):
+        client = APIClient()
+
+        response = client.post('/logout/')
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        response = client.post('/login/', data={"email": test_user.email, "password": "password123"})
+        client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access_token']}")
+        assert response.status_code == status.HTTP_200_OK
+
+        response = client.post('/logout/')
+        assert response.status_code == status.HTTP_200_OK
+
+        with pytest.raises(TokenError):
+            response = client.post('/logout/')
+            assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+def login(test_user, client):
+    # Login
+    login_response = client.post('/login/', data={"email": test_user.email, "password": "password123"})
+    assert login_response.status_code == status.HTTP_200_OK
+
+    access_token = login_response.data["access_token"]
+
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+
+
+class TestReviewViews:
+    @pytest.fixture()
+    def test_user(self, request):
+        user = User.objects.create_user(email="test@example.com", password="password123", first_name="John",
+                                        last_name="Doe")
+        request.addfinalizer(user.delete)
+        return user
+
+    @pytest.fixture()
+    def test_listing(self, request):
+        owner = User.objects.create_user(email="test", password="test")
+        listing = Listing.objects.create(
+            title="Test Listing",
+            image="listing_images/test.jpg",
+            description="Test Description",
+            price=100.00,
+            quantity=10,
+            owner_id=owner.id,
+            category=Category.objects.create(name="Test Category")
+        )
+        request.addfinalizer(listing.delete)
+        request.addfinalizer(owner.delete)
+        return listing
+
+    @pytest.fixture()
+    def test_client(self, request):
+        client = APIClient()
+        request.addfinalizer(client.logout)
+        return client
+
+    @pytest.mark.django_db
+    def test_create_review(self, test_user, test_listing, test_client):
+        test_client = APIClient()
+        login(test_user, test_client)
+
+        # Post a review with valid data
+        review_data = {
+            "user": test_user.id,
+            "listing": test_listing.id,
+            "rating": 3,
+            "comment": "Test Review"
+        }
+        response = test_client.post('/reviews/', data=review_data)
+
+        assert response.status_code == status.HTTP_201_CREATED
+
+        review_data["rating"] = 6
+        response = test_client.post('/reviews/', data=review_data)
+
+        # Try to post a review with invalid data
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+        # Try to post a review on own listing
+        listing = Listing.objects.create(
+            title="Test Listing",
+            image="listing_images/test.jpg",
+            description="Test Description",
+            price=100.00,
+            quantity=10,
+            owner_id=test_user.id,
+            category=Category.objects.create(name="Test Category")
+        )
+        # Update the review data to post a review on the listing
+        review_data["listing"] = listing.id
+        review_data["rating"] = 3
+
+        response = test_client.post('/reviews/', data=review_data)
+
+        # TODO: I get a 201 instead of a 405
+        assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED

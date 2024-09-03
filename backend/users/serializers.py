@@ -14,6 +14,10 @@ class LoginSerializer(serializers.Serializer):
         email = data.get('email')
         password = data.get('password')
 
+        # Debugging
+        if not email or not password:
+            raise serializers.ValidationError('Must include "email" and "password".')
+
         user = authenticate(request=self.context.get('request'),
                             email=email, password=password)
 
@@ -23,6 +27,14 @@ class LoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+
+    def create(self, validated_data):
+        email = validated_data.pop('email')
+        password = validated_data.pop('password')
+        user = authenticate(email=email, password=password)
+        if user is None:
+            raise serializers.ValidationError('Invalid login credentials')
+        return user
 
 
 def validate_email(value):
@@ -79,6 +91,22 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = "__all__"
+
+    def validate(self, attrs):
+        if not attrs.get('rating') in range(1, 6):
+            raise serializers.ValidationError('Rating must be between 1 and 5')
+        return attrs
+
+    def save(self, **kwargs):
+        listing = kwargs.get('listing')
+        user = kwargs.get('user')
+        rating = self.validated_data.get('rating')
+        review = Review.objects.filter(listing=listing, user=user).first()
+        if review:
+            review.rating = rating
+            review.save()
+        else:
+            super().save(**kwargs)
 
 
 class MessageSerializer(serializers.ModelSerializer):

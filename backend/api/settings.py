@@ -78,7 +78,7 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",  # This is the correct placement
+    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
 }
 
 

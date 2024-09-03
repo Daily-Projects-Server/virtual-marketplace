@@ -30,24 +30,26 @@ class LoginView(APIView):
     authentication_classes = []
 
     def post(self, request, format=None):
-        try:
-            serializer = LoginSerializer(data=request.data, context={'request': request})
-            serializer.is_valid(raise_exception=True)
-            user = serializer.validated_data.get('user')
-            refresh = RefreshToken.for_user(user)
+        #try:
+        serializer = LoginSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user = serializer.validated_data.get('user')
+        refresh = RefreshToken.for_user(user)
 
-            RESPONSE_DATA = {
-                "message": responseMessages.LOGIN_MESSAGE,
-                "response": responseMessages.SUCCESS_RESPONSE_MESSAGE,
-                "access_token": str(refresh.access_token),
-            }
-            response = Response(RESPONSE_DATA, status=status.HTTP_200_OK)
-            response.set_cookie("refresh_token", str(refresh), httponly=True)
-            return response
+        response_data = {
+            "message": responseMessages.LOGIN_MESSAGE,
+            "response": responseMessages.SUCCESS_RESPONSE_MESSAGE,
+            "access_token": str(refresh.access_token),
+        }
+        response = Response(response_data, status=status.HTTP_200_OK)
+        response.set_cookie("refresh_token", str(refresh), httponly=True)
+        return response
 
-        except APIException as exe:
-            logger.error(str(exe), exc_info=True)
-            raise APIException(exe.detail)
+        # It raises a 500 error everytime
+        #except APIException as exe:
+        #    logger.error(str(exe), exc_info=True)
+        #    raise APIException(exe.detail)
 
 
 @method_decorator(sensitive_post_parameters('password', 'confirm_password'), name="dispatch")
