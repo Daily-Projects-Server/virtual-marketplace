@@ -1,0 +1,55 @@
+<div class="header">
+  <div class="header__wrapper">
+    <div class="container">
+      <div class="logo">
+        <app-button route="/main">
+          <img src="assets/logo.png" alt="logo" />
+        </app-button>
+      </div>
+      <div class="categories">
+        <app-button route="category">
+          <img src="assets/category.png" alt="categories" />
+        </app-button>
+      </div>
+    </div>
+    <!-- Search -->
+    <div class="search container">
+      <div class="search-field">
+        <input type="text" placeholder="Search for products" />
+        <img src="assets/search.png" alt="search" />
+      </div>
+      <div class="search-prompts"></div>
+    </div>
+    <div class="container">
+      <!-- Cart -->
+      <div class="cart">
+        <app-button route="cart">
+          <img src="assets/cart.png" alt="cart" />
+        </app-button>
+      </div>
+      <!-- Favourite -->
+      <div class="favourite">
+        <app-button route="favourite">
+          <img src="assets/favourite.png" alt="favourite" />
+        </app-button>
+      </div>
+      <!-- Change theme -->
+      <div class="theme">
+        <app-button>
+          <img src="assets/theme.png" alt="theme" />
+        </app-button>
+      </div>
+      <!-- Login/Registration if not logged in or User if logged in -->
+      <div class="login" *ngIf="!authService.isLoggedIn; else userBlock">
+        <app-button (buttonFunction)="openLoginModal()">
+          Login/Registration
+        </app-button>
+      </div>
+      <ng-template class="user" #userBlock>
+        <app-button>
+          <img src="assets/user.png" alt="user" />
+        </app-button>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,17 @@
+<div class="rate">
+  <div class="stars">
+    <!-- for loop of number -->
+    @for (item of fakeArray; track $index) {}
+    <div class="star">
+      <img src="assets/icons/rate/star.svg" />
+    </div>
+    @if (rating() % 1 != 0) {
+      <div class="star">
+        <img src="assets/icons/rate/half-star.svg" />
+      </div>
+    }
+  </div>
+  <div class="score">
+    {{ rating().toFixed(1) }}/<span class="maximum">{{ maximum() }}</span>
+  </div>
+</div>

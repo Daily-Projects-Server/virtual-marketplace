@@ -1,0 +1,34 @@
+<div class="register-form">
+  <form [formGroup]="registerForm" (submit)="onSubmit()">
+    <app-form-input
+      [autocomplete]="InputAutocomplete.FIRSTNAME"
+      [control]="registerForm.controls.firstName"
+      placeholder="First Name"
+      [type]="InputType.TEXT"
+    ></app-form-input>
+    <app-form-input
+      [autocomplete]="InputAutocomplete.LASTNAME"
+      [control]="registerForm.controls.lastName"
+      placeholder="Last Name"
+      [type]="InputType.TEXT"
+    ></app-form-input>
+    <app-form-input
+      [autocomplete]="InputAutocomplete.EMAIL"
+      [control]="registerForm.controls.email"
+      [type]="InputType.TEXT"
+      placeholder="Email"
+    ></app-form-input>
+    <app-form-input
+      [autocomplete]="InputAutocomplete.NEWPASSWORD"
+      [control]="registerForm.controls.password"
+      [type]="InputType.PASSWORD"
+      placeholder="Password"
+    ></app-form-input>
+    <div class="register">
+      <app-button [type]="ButtonType.SUBMIT" [disabled]="!registerForm.valid">Registration</app-button>
+    </div>
+    <div class="login">
+      <app-button (buttonFunction)="showLoginModal()">Login</app-button>
+    </div>
+  </form>
+</div>

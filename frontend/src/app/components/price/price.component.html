@@ -1,0 +1,8 @@
+<div class="price">
+  @if (newPrice() > 0) {
+  <span class="discounted-price">{{ newPrice() }}</span>
+  }
+  <span class="original-price {{ newPrice() > 0 ? 'disabled' : '' }}">
+    {{ price() }}
+  </span>
+</div>

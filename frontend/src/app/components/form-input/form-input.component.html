@@ -1,0 +1,11 @@
+<div class="form-input">
+  <input
+    [autocomplete]="autocomplete()"
+    (change)="returnValue($event)"
+    [placeholder]="placeholder()"
+    [formControl]="control()"
+    [type]="type()"
+    [name]="name()"
+  />
+  <p class="error-message">{{ errorMessage() }}</p>
+</div>

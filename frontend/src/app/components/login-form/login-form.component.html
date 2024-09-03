@@ -1,0 +1,24 @@
+<div class="login-form">
+  <form [formGroup]="loginForm" (submit)="onSubmit()">
+    <app-form-input
+    [autocomplete]="InputAutocomplete.EMAIL"
+      [control]="loginForm.controls.email"
+      [type]="InputType.TEXT"
+      placeholder="Email"
+    ></app-form-input>
+    <app-form-input
+      [autocomplete]="InputAutocomplete.CURRENTPASSWORD"
+      [control]="loginForm.controls.password"
+      [type]="InputType.PASSWORD"
+      placeholder="Password"
+    ></app-form-input>
+    <div class="login">
+      <app-button [type]="ButtonType.SUBMIT" [disabled]="!loginForm.valid"> Login </app-button>
+    </div>
+    <div class="register">
+      <app-button (buttonFunction)="showRegisterModal()"
+        >Registration
+      </app-button>
+    </div>
+  </form>
+</div>
