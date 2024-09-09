@@ -10,12 +10,12 @@ export const routes: Routes = [
     children: [
       {
         path: 'component-a',
-        component: ContentAComponent
+        component: ContentAComponent,
       },
       {
         path: 'component-b',
-        component: ContentBComponent
-      }
-    ]
-  }
+        component: ContentBComponent,
+      },
+    ],
+  },
 ];
