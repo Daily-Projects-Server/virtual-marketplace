@@ -8,8 +8,9 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
-    "prepare": "husky && husky install",
-    "lint": "ng lint"
+    "prepare": "husky",
+    "lint": "ng lint",
+    "format": "prettier --write ."
   },
   "private": true,
   "dependencies": {
@@ -51,6 +52,6 @@
     "typescript-eslint": "8.1.0"
   },
   "lint-staged": {
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,css,scss,ts,md}": "prettier --write"
   }
 }
