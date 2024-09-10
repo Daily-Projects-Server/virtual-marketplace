@@ -1,2 +1,1 @@
-ng test --watch=false --browsers=ChromeHeadless
-npx lint-staged
+npm test

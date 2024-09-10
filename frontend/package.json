@@ -7,12 +7,19 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
-    "prepare": "husky",
     "lint": "ng lint",
-    "format": "prettier --write ."
+    "serve:ssr:frontend": "node dist/frontend/server/server.mjs",
+    "prepare": "husky"
   },
   "private": true,
+  "lint-staged": {
+    "*.{js,ts,css,scss,html,json}": [
+      "prettier --write"
+    ]
+  },
+  "hooks": {
+    "pre-commit": "lint-staged"
+  },
   "dependencies": {
     "@angular/animations": "^18.1.0",
     "@angular/common": "^18.1.0",
@@ -39,19 +46,16 @@
     "@types/node": "^18.18.0",
     "angular-eslint": "18.3.0",
     "eslint": "^9.9.0",
-    "husky": "^9.1.5",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "typescript": "~5.5.2",
     "typescript-eslint": "8.1.0"
-  },
-  "lint-staged": {
-    "*.{js,css,scss,ts,md}": "prettier --write"
   }
 }
