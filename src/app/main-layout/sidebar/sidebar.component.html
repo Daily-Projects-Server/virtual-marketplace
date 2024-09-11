@@ -1,0 +1,17 @@
+<div>
+  <p-tieredMenu [model]="items">
+    <ng-template pTemplate="item" let-item let-hasSubmenu="hasSubmenu">
+      <ng-container *ngIf="item.route; else withoutRoute">
+        <a [routerLink]="item.route" [href]="item.href" class="p-menuitem-link">
+          <span>{{ item.label }}</span>
+        </a>
+      </ng-container>
+      <ng-template #withoutRoute>
+        <a class="p-menuitem-link">
+          <span>{{ item.label }}</span>
+          <span *ngIf="hasSubmenu" style="margin-left: auto"> ➤ </span>
+        </a>
+      </ng-template>
+    </ng-template>
+  </p-tieredMenu>
+</div>
