@@ -1,8 +1,8 @@
 # Rest
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import viewsets, permissions
 
 # Local
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsNotListingOwner
 from .serializers import *
 
 
@@ -30,10 +30,7 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class ReviewViewSet(mixins.CreateModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    viewsets.GenericViewSet):
+class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsNotListingOwner]
