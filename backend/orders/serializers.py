@@ -20,6 +20,11 @@ class CartSerializer(serializers.ModelSerializer):
     #    response['cart_items'] = CartItemSerializer(instance.cartitem_set.all(), many=True).data
     #    return response
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response['cart_items'] = CartItemSerializer(instance.cartitem_set.all(), many=True).data
+        return response
+
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
