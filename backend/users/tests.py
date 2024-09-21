@@ -11,6 +11,23 @@ from .models import Settings
 User = get_user_model()
 
 
+# Authentication
+def login(test_user, client):
+    # Login
+    login_response = client.post('/login/', data={"email": test_user.email, "password": "password123"})
+    assert login_response.status_code == status.HTTP_200_OK
+
+    access_token = login_response.data["access_token"]
+
+    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+
+
+def logout(test_user, client):
+    if test_user.is_authenticated:
+        client.post('/logout/')
+        client.credentials()
+
+
 class TestUserModel:
     @pytest.fixture()
     def test_user(self, request):
@@ -162,16 +179,6 @@ class TestUserViews:
             assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
 
-def login(test_user, client):
-    # Login
-    login_response = client.post('/login/', data={"email": test_user.email, "password": "password123"})
-    assert login_response.status_code == status.HTTP_200_OK
-
-    access_token = login_response.data["access_token"]
-
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
-
-
 class TestReviewViews:
     @pytest.fixture()
     def test_user(self, request):
@@ -196,9 +203,23 @@ class TestReviewViews:
         request.addfinalizer(owner.delete)
         return listing
 
+
     @pytest.mark.django_db
     def test_create_review(self, test_user, test_listing):
         client = APIClient()
+
+        # Review with valid data
+        review_data = {
+            "user": test_user.id,
+            "listing": test_listing.id,
+            "rating": 3,
+            "comment": "Test Review"
+        }
+
+        # Try to post a review without authentication
+        assert client.post('/reviews/', data=review_data).status_code == status.HTTP_401_UNAUTHORIZED
+
+        # Authenticate the user
         login(test_user, client)
 
         # Post a review with valid data
@@ -234,4 +255,90 @@ class TestReviewViews:
 
         response = client.post('/reviews/', data=review_data)
 
+        # Check if the response is 403 Forbidden
+        assert response.status_code == status.HTTP_403_FORBIDDEN
+
+
+    @pytest.mark.django_db
+    def test_retrieve_reviews(self, test_user, test_listing):
+        client = APIClient()
+
+        # List reviews
+        response = client.get('/reviews/')
+        assert response.status_code == status.HTTP_200_OK
+
+
+    @pytest.mark.django_db
+    def test_update_review(self, test_user, test_listing):
+        client = APIClient()
+
+        # Authenticate the user
+        login(test_user, client)
+
+        # Create a review
+        review_data = {
+            "user": test_user.id,
+            "listing": test_listing.id,
+            "rating": 3,
+            "comment": "Test Review"
+        }
+        response = client.post('/reviews/', data=review_data)
+
+        # Update the review
+        review = response.data
+        review_data["rating"] = 5
+        response = client.put(f'/reviews/{review["id"]}/', data=review_data)
+        assert response.status_code == status.HTTP_200_OK
+
+        # Update the review with invalid data
+        review_data["rating"] = 6
+        response = client.put(f'/reviews/{review["id"]}/', data=review_data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+        # Update the review on own listing
+        review_data["user"] = 1
+        response = client.put(f'/reviews/{review["id"]}/', data=review_data)
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+        # Update the review without authentication
+        logout(test_user, client)
+        response = client.put(f'/reviews/{review["id"]}/', data=review_data)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+    @pytest.mark.django_db
+    def test_destroy_review(self, test_user, test_listing):
+        client = APIClient()
+
+        # Create user
+        user = User.objects.create_user(email="second@second.com", password="password123")
+
+        # Authenticate the user
+        login(user, client)
+
+        # Create a review
+        review_data = {
+            "user": user.id,
+            "listing": test_listing.id,
+            "rating": 3,
+            "comment": "Test Review"
+        }
+        response = client.post('/reviews/', data=review_data)
+
+        # Delete the review
+        review = response.data
+        response = client.delete(f'/reviews/{review["id"]}/')
+        assert response.status_code == status.HTTP_204_NO_CONTENT
+
+        # Delete the review without authentication
+        logout(user, client)
+        response = client.delete(f'/reviews/{review["id"]}/')
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+        # Delete the review on own listing with different user
+        login(test_user, client)
+        review_data["user"] = Listing.objects.get(id=review["listing"]).owner_id
+        response = client.post('/reviews/', data=review_data)
+        review = response.data
+        response = client.delete(f'/reviews/{review["id"]}/')
         assert response.status_code == status.HTTP_403_FORBIDDEN

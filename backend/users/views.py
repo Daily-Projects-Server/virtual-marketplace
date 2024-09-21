@@ -2,7 +2,7 @@
 from rest_framework import viewsets, permissions
 
 # Local
-from .permissions import IsOwnerOrReadOnly, IsNotListingOwner
+from .permissions import IsOwnerOrReadOnly, IsAllowedToReview, IsAllowedToDestroyReview
 from .serializers import *
 
 
@@ -33,4 +33,4 @@ class FavoriteViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsNotListingOwner]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAllowedToReview, IsAllowedToDestroyReview]

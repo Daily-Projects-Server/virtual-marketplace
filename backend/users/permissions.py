@@ -9,7 +9,7 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.user == request.user
 
 
-class IsNotListingOwner(permissions.BasePermission):
+class IsAllowedToReview(permissions.BasePermission):
     def has_permission(self, request, view):
         if view.action == 'create':
             listing_id = request.data.get('listing')
@@ -22,3 +22,8 @@ class IsNotListingOwner(permissions.BasePermission):
         if view.action in ['update', 'partial_update', 'destroy']:
             return obj.listing.owner != request.user
         return True
+
+
+class IsAllowedToDestroyReview(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user
