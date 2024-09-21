@@ -196,16 +196,10 @@ class TestReviewViews:
         request.addfinalizer(owner.delete)
         return listing
 
-    @pytest.fixture()
-    def test_client(self, request):
-        client = APIClient()
-        request.addfinalizer(client.logout)
-        return client
-
     @pytest.mark.django_db
-    def test_create_review(self, test_user, test_listing, test_client):
-        test_client = APIClient()
-        login(test_user, test_client)
+    def test_create_review(self, test_user, test_listing):
+        client = APIClient()
+        login(test_user, client)
 
         # Post a review with valid data
         review_data = {
@@ -214,12 +208,12 @@ class TestReviewViews:
             "rating": 3,
             "comment": "Test Review"
         }
-        response = test_client.post('/reviews/', data=review_data)
+        response = client.post('/reviews/', data=review_data)
 
         assert response.status_code == status.HTTP_201_CREATED
 
         review_data["rating"] = 6
-        response = test_client.post('/reviews/', data=review_data)
+        response = client.post('/reviews/', data=review_data)
 
         # Try to post a review with invalid data
         assert response.status_code == status.HTTP_400_BAD_REQUEST
@@ -238,6 +232,7 @@ class TestReviewViews:
         review_data["listing"] = listing.id
         review_data["rating"] = 3
 
-        response = test_client.post('/reviews/', data=review_data)
+        response = client.post('/reviews/', data=review_data)
 
-        assert response.status_code == status.HTTP_403_FORBIDDEN
+        # TODO: I get a 201 instead of a 400
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
