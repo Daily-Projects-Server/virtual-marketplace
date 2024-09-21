@@ -240,5 +240,4 @@ class TestReviewViews:
 
         response = test_client.post('/reviews/', data=review_data)
 
-        # TODO: I get a 201 instead of a 400
-        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert response.status_code == status.HTTP_403_FORBIDDEN
