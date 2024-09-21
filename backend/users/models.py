@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 from core.models import BaseModel
+from orders.models import Cart
 
 
 # Manager for the User model
@@ -88,6 +89,12 @@ class User(AbstractBaseUser, BaseModel):
             )
             self.settings = new_settings
             super(User, self).save(*args, **kwargs)
+
+
+        # Create a cart for the user
+        if not hasattr(self, 'cart'):
+            cart = Cart.objects.create(buyer=self)
+            self.cart = cart
 
         return instance
 

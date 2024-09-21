@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 
 from rest_framework import serializers
 
+from orders.models import Cart
 from .models import *
 
 

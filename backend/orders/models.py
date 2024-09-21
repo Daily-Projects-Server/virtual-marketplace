@@ -30,7 +30,7 @@ class Cart(BaseModel):
 
 class CartItem(BaseModel):
     cart = models.ManyToManyField(to=Cart)
-    listings = models.ManyToManyField(to='listings.Listing')
+    listing = models.ManyToManyField(to='listings.Listing')
     quantity = models.PositiveSmallIntegerField(default=1, null=False)
 
 
