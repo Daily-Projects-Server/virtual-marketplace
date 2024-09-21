@@ -44,6 +44,13 @@ def validate_email(value):
     return value
 
 
+def validate_email(value):
+    if User.objects.filter(email=value).exists():
+        raise serializers.ValidationError('Email already exits')
+
+    return value
+
+
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField()
 
