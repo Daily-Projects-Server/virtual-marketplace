@@ -117,6 +117,12 @@ class TestUserModel:
         test_user.delete()
         assert Settings.objects.count() == 1
 
+    @pytest.mark.django_db
+    def test_if_cart_is_created_when_user_is_created(self, test_user):
+        assert test_user.cart is not None
+        assert test_user.cart.buyer == test_user
+        assert test_user.cart.cartitem_set.count() == 0
+
 
 class TestUserViews:
     @pytest.fixture()
