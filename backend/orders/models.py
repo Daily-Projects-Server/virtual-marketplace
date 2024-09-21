@@ -14,7 +14,7 @@ class Transaction(BaseModel):
         verbose_name_plural = "Transactions"
 
     def __str__(self):
-        return f"{self.buyer.username} bought {self.quantity} of {self.listing.title} from {self.seller.username}"
+        return f"{self.buyer.email} bought {self.quantity} of {self.listing.title} from {self.seller.email}"
 
 
 class Cart(BaseModel):
@@ -25,7 +25,7 @@ class Cart(BaseModel):
         verbose_name_plural = "Orders"
 
     def __str__(self):
-        return f"{self.buyer.username}'s cart"
+        return f"{self.buyer.email}'s cart"
 
 
 class CartItem(BaseModel):
