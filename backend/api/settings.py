@@ -15,14 +15,13 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environment variables
 env = environ.Env()
 
-# Read .env file
-environ.Env.read_env(os.path.join(os.path.dirname(__file__), '..', '.env'))  # This will automatically read the .env file in the backend directory
+# This will automatically read the .env file in the backend directory
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 # Use environment variables
 SECRET_KEY = env('SECRET_KEY')
@@ -38,8 +37,10 @@ env.escape_proxy = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost'] #This is safe and convenient for testing locally (Development Environment). In a production environment, you should include the domain names or IP addresses where your application will be hosted. Using a wildcard is not recommended for production environments because it makes your site more vulnerable to HTTP Host header attacks.
-
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+# This is safe and convenient for testing locally (Development Environment). In a production environment, you should
+# include the domain names or IP addresses where your application will be hosted. Using a wildcard is not recommended
+# for production environments because it makes your site more vulnerable to HTTP Host header attacks.
 
 
 # Application definition
@@ -69,7 +70,6 @@ LOCAL_APPS = [
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-
 # Settings for Django Rest Framework
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
@@ -78,15 +78,14 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
-    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",  # This is the correct placement
+    "EXCEPTION_HANDLER": "core.exceptions.custom_exception_handler",
 }
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
-
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -138,7 +137,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -149,7 +147,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -170,7 +167,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),

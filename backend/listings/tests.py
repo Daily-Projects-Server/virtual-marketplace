@@ -1,12 +1,11 @@
 import pytest
-
 from users.models import User
 from rest_framework.exceptions import ValidationError
 
 from listings.models import Listing, Category
 
 
-class TestListingsModels:
+class TestListingsModel:
     @pytest.fixture()
     def owner(self):
         return User.objects.create_user(email="testl@email.com", password="password123")

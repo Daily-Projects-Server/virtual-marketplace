@@ -1,8 +1,8 @@
 # Rest
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, permissions
 
 # Local
-from .permissions import *
+from .permissions import IsOwnerOrReadOnly, IsAllowedToReview, IsAllowedToDestroyReview
 from .serializers import *
 
 
@@ -30,14 +30,7 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class ReviewViewSet(mixins.CreateModelMixin,
-                    mixins.UpdateModelMixin,
-                    mixins.DestroyModelMixin,
-                    viewsets.GenericViewSet):
+class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
-    serializers_class = ReviewSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-
-    def perform_create(self, serializer):
-        listing = self.request.data.get('listing')
-        serializer.save(user=self.request.user, listing=listing)
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsAllowedToReview, IsAllowedToDestroyReview]
