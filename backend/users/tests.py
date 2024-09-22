@@ -8,6 +8,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django.conf import settings
 
 from listings.models import Listing, Category
+from orders.models import Cart
 from .models import Settings
 
 
@@ -121,6 +122,7 @@ class TestUserModel:
         assert test_user.cart is not None
         assert test_user.cart.buyer == test_user
         assert test_user.cart.cartitem_set.count() == 0
+        assert Cart.objects.count() == 1
 
 
 class TestUserViews:
