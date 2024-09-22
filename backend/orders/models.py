@@ -33,6 +33,9 @@ class CartItem(BaseModel):
     listing = models.ManyToManyField(to='listings.Listing')
     quantity = models.PositiveSmallIntegerField(default=1, null=False)
 
+    def __str__(self):
+        return f"{self.quantity} of {self.listing.title} in {self.cart.buyer.email}'s cart"
+
 
 class Coupon(BaseModel):
     code = models.CharField(max_length=255, null=False)

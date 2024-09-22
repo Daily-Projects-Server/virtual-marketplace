@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from .models import *
+from .permissions import IsNotAllowedToDestroy
 from .serializers import *
 
 
@@ -13,6 +14,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
+    permission_classes = [IsNotAllowedToDestroy]
 
 
 class CartItemViewSet(viewsets.ModelViewSet):

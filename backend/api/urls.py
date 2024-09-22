@@ -19,7 +19,7 @@ router.register(r"categories", CategoryViewSet)
 # # Orders
 router.register(r"transactions", TransactionViewSet)
 router.register(r"cart", CartViewSet)
-router.register(r"cart-items", CartItemViewSet)
+router.register(r"cart-item", CartItemViewSet)
 router.register(r"coupons", CouponViewSet)
 
 
