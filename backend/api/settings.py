@@ -60,6 +60,7 @@ THIRD_PARTY_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 LOCAL_APPS = [
@@ -73,6 +74,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # Settings for Django Rest Framework
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticatedOrReadOnly",
     ],
@@ -210,3 +212,20 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://localhost:8000",
     ]
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Virtual Marketplace API',
+    'DESCRIPTION': 'API for Virtual Marketplace',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'TAGS': [
+        {'name': 'Users', 'description': 'User management operations'},
+        {'name': 'Authentication', 'description': 'Authentication operations'},
+        {'name': 'Addresses', 'description': 'Address management operations'},
+        {'name': 'Favorites', 'description': 'Favorite management operations'},
+        {'name': 'Reviews', 'description': 'Review management operations'},
+        {'name': 'Listings', 'description': 'Listing management operations'},
+        {'name': 'Transactions', 'description': 'Transaction management operations'},
+    ],
+}
+
