@@ -42,7 +42,9 @@ class TestCartItem:
 
     @pytest.mark.django_db
     def test_cart_item_model(self, test_user, test_listing, test_cart):
-        cart_item = CartItem.objects.create(quantity=1, cart=test_cart, listing=test_listing)
+        cart_item = CartItem.objects.create(
+            quantity=1, cart=test_cart, listing=test_listing
+        )
         assert CartItem.objects.count() == 1
         assert test_cart == cart_item.cart
         assert test_listing == cart_item.listing
@@ -106,8 +108,20 @@ class TestCart:
         )
 
         # Change the listing to a cart item
-        #cart_item_url = reverse("cart-item")
+        cart_item_url = reverse("cart-item-list")
         response = client.post(
-            "/api/cart-item/", {"cart": test_cart.id, "listing": listing.id, "quantity": 1}
+            cart_item_url,
+            {"cart": test_cart.id, "listing": listing.id, "quantity": 1},
         )
         assert response.status_code == 201
+
+
+    #def test_remove_item_from_cart(self, test_user, test_cart, test_listing):
+    #    # Setup
+    #    client = APIClient()
+    #    CartItem.objects.create(
+    #        quantity=1, cart=test_cart, listing=test_listing
+    #    )
+    #    login(test_user, client)
+
+

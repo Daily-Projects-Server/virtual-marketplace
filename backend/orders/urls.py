@@ -9,5 +9,5 @@ router.register(r"cart-item", views.CartItemViewSet, basename="cart-item")
 router.register(r"coupons", views.CouponViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]
