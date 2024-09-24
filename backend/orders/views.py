@@ -2,9 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
-from .permissions import IsNotAllowedToDestroy
+from .permissions import IsNotAllowedToDestroy, IsItemAlreadyInCart
 from .models import *
-from .permissions import IsNotAllowedToDestroy
 from .serializers import *
 
 
@@ -145,6 +144,7 @@ class CartViewSet(viewsets.ModelViewSet):
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
+    permission_classes = [IsItemAlreadyInCart]
 
 
 @extend_schema_view(

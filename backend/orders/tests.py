@@ -81,9 +81,11 @@ class TestCart:
     def test_cart(self, test_user):
         return Cart.objects.get(buyer=test_user)
 
+
     @pytest.mark.django_db
     def test_cart_model(self, test_user):
         assert Cart.objects.count() == 1
+
 
     @pytest.mark.django_db
     def test_add_item_to_cart(self, test_user, test_cart):
@@ -116,12 +118,35 @@ class TestCart:
         assert response.status_code == 201
 
 
-    #def test_remove_item_from_cart(self, test_user, test_cart, test_listing):
-    #    # Setup
-    #    client = APIClient()
-    #    CartItem.objects.create(
-    #        quantity=1, cart=test_cart, listing=test_listing
-    #    )
-    #    login(test_user, client)
+    @pytest.mark.django_db
+    def test_remove_item_from_cart(self, test_user, test_cart, test_listing):
+        client = APIClient()
+        login(test_user, client)
+        cart_item_url = reverse("cart-item-list")
+        response = client.post(
+            cart_item_url,
+            {"cart": test_cart.id, "listing": test_listing.id, "quantity": 1},
+        )
+        assert response.status_code == 201
+
+        cart_item = CartItem.objects.get(cart=test_cart, listing=test_listing)
+        cart_item_url = reverse("cart-item-detail", args=[cart_item.id])
+        response = client.delete(cart_item_url)
+        assert response.status_code == 204
 
 
+    @pytest.mark.django_db
+    def test_update_cart_item(self, test_user, test_cart, test_listing):
+        client = APIClient()
+        CartItem.objects.create(
+            quantity=1, cart=test_cart, listing=test_listing
+        )
+        login(test_user, client)
+
+        cart_item = CartItem.objects.get(cart=test_cart, listing=test_listing)
+        cart_item_url = reverse("cart-item-detail", args=[cart_item.id])
+        data = client.get(cart_item_url).data
+        data["quantity"] = 2
+        response = client.put(cart_item_url, data)
+        assert response.status_code == 200
+        assert CartItem.objects.get(id=cart_item.id).quantity == 2
