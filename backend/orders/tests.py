@@ -110,5 +110,4 @@ class TestCart:
         response = client.post(
             "/api/cart-item/", {"cart": test_cart.id, "listing": listing.id, "quantity": 1}
         )
-        print("Content: ", response.content)
         assert response.status_code == 201
