@@ -137,6 +137,7 @@ class TestCart:
             cart_item_url,
             {"cart": cart_fixture.id, "listing": listing_fixture.id, "quantity": 1},
         )
+        print("Content: ", response.content)
         assert response.status_code == 201
 
         # Remove the listing from the cart
