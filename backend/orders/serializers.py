@@ -203,14 +203,6 @@ class CartItemSerializer(serializers.ModelSerializer):
         if not Cart.objects.filter(id=cart.id).exists():
             raise serializers.ValidationError("Cart does not exist")
 
-        # Check if the item already exists in the cart
-        if CartItem.objects.filter(cart=cart, listing=listing).exists():
-            raise serializers.ValidationError("Item already exists in cart")
-
-        # Check if the cart belongs to the user
-        #if cart.buyer != request.user:
-        #    raise serializers.ValidationError("Cart does not belong to the user")
-
         # Check the listing
         if not listing.active:
             raise serializers.ValidationError("Listing is not active")
