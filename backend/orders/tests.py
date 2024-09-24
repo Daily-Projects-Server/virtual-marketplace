@@ -111,11 +111,19 @@ class TestCart:
 
         # Change the listing to a cart item
         cart_item_url = reverse("cart-item-list")
+        data = {"cart": test_cart.id, "listing": listing.id, "quantity": 1}
         response = client.post(
             cart_item_url,
-            {"cart": test_cart.id, "listing": listing.id, "quantity": 1},
+            data,
         )
         assert response.status_code == 201
+
+        # Try to add the same item to the cart
+        response = client.post(
+            cart_item_url,
+            data,
+        )
+        assert response.status_code == 403
 
 
     @pytest.mark.django_db
