@@ -33,8 +33,8 @@ class Cart(BaseModel):
 
 
 class CartItem(BaseModel):
-    cart = models.ManyToManyField(to=Cart)
-    listing = models.ManyToManyField(to="listings.Listing")
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=1, null=False)
 
     def __str__(self):

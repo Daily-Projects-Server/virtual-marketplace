@@ -30,14 +30,14 @@ class CartItemSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         listing = validated_data.pop("listing")
         cart = validated_data.pop("cart")
-        cart_item = CartItem.objects.create(**validated_data)
-        cart_item.listing.set([listing.id])
-        cart_item.cart.set([cart.id])
+        cart_item = CartItem.objects.create(
+            listing=listing, cart=cart, **validated_data
+        )
         return cart_item
 
     def validate(self, attrs):
-        listing = Listing.objects.filter(id=int(attrs["listing"][0].id)).first()
-        cart = Cart.objects.filter(id=int(attrs["cart"][0].id)).first()
+        listing = attrs["listing"]
+        cart = attrs["cart"]
         quantity = int(attrs["quantity"])
 
         # Check the quantity of the listing
@@ -49,7 +49,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Quantity cannot be less than 1")
 
         # Check if the cart exists
-        if not cart:
+        if not Cart.objects.filter(id=cart.id).exists():
             raise serializers.ValidationError("Cart does not exist")
 
         # Check if the item already exists in the cart
@@ -57,13 +57,11 @@ class CartItemSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Item already exists in cart")
 
         # Check if the cart belongs to the user
-        if cart.buyer != listing.owner:
-            raise serializers.ValidationError("Cart does not belong to the user")
+        #if cart.buyer != request.user:
+        #    raise serializers.ValidationError("Cart does not belong to the user")
 
         # Check the listing
-        if not listing.first():
-            raise serializers.ValidationError("Listing does not exist")
-        elif not listing.active:
+        if not listing.active:
             raise serializers.ValidationError("Listing is not active")
         return attrs
 
