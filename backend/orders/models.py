@@ -3,9 +3,13 @@ from core.models import BaseModel
 
 
 class Transaction(BaseModel):
-    buyer = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="buyer")
-    seller = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="seller")
-    listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
+    buyer = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="buyer"
+    )
+    seller = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="seller"
+    )
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, null=False)
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -18,7 +22,7 @@ class Transaction(BaseModel):
 
 
 class Cart(BaseModel):
-    buyer = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    buyer = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Order"
@@ -29,12 +33,14 @@ class Cart(BaseModel):
 
 
 class CartItem(BaseModel):
-    cart = models.ManyToManyField(to=Cart)
-    listing = models.ManyToManyField(to='listings.Listing')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=1, null=False)
 
     def __str__(self):
-        return f"{self.quantity} of {self.listing.title} in {self.cart.buyer.email}'s cart"
+        return (
+            f"{self.quantity} of {self.listing.title} in {self.cart.buyer.email}'s cart"
+        )
 
 
 class Coupon(BaseModel):

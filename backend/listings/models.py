@@ -11,7 +11,7 @@ class Listing(BaseModel):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
-    owner = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    owner = models.ForeignKey("users.User", on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
     category = models.ForeignKey("Category", on_delete=models.CASCADE)
 
@@ -58,14 +58,16 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
-      
+
 
 class Favorite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name='favorited_by')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="favorites")
+    listing = models.ForeignKey(
+        Listing, on_delete=models.CASCADE, related_name="favorited_by"
+    )
 
     class Meta:
-        unique_together = ('user', 'listing')
+        unique_together = ("user", "listing")
         verbose_name = "Favorite"
         verbose_name_plural = "Favorites"
 

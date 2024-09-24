@@ -1,4 +1,4 @@
-LOGIN_MESSAGE = 'You are login successfully'
+LOGIN_MESSAGE = 'You have successfully logged in'
 SUCCESS_RESPONSE_MESSAGE = 'Ok'
 API_RESPONSE = 'response'
 

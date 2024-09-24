@@ -14,6 +14,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 # from rest_framework_simplejwt.serializers import  TokenBlacklistSerializer
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
+from drf_spectacular.types import OpenApiTypes
 
 from .serializers import LoginSerializer, RegisterSerializer
 from core.common import responseMessages
@@ -25,6 +27,13 @@ __all__ = ['LoginView', 'RegisterView', 'RefreshTokenView']
 
 
 @method_decorator(sensitive_post_parameters('password'), name="dispatch")
+@extend_schema(
+    summary="Login",
+    description="Login a user.",
+    request=LoginSerializer,
+    responses={200: LoginSerializer},
+    tags=["Authentication"]
+)
 class LoginView(APIView):
     permission_classes = []
     authentication_classes = []
@@ -53,6 +62,13 @@ class LoginView(APIView):
 
 
 @method_decorator(sensitive_post_parameters('password', 'confirm_password'), name="dispatch")
+@extend_schema(
+    summary="Register",
+    description="Register a new user.",
+    request=RegisterSerializer,
+    responses={201: RegisterSerializer},
+    tags=["Authentication"]
+)
 class RegisterView(APIView):
     permission_classes = []
     authentication_classes = []
@@ -71,7 +87,11 @@ class RegisterView(APIView):
 
         return Response(response_data, status=response_status)
 
-
+@extend_schema(
+    summary="Refresh Token",
+    description="Refresh the access token using the refresh token.",
+    tags=["Authentication"]
+)
 class RefreshTokenView(TokenRefreshView):
     """ overriding default refresh token view
     """
@@ -92,7 +112,10 @@ class RefreshTokenView(TokenRefreshView):
             }
             response = Response(RESPONSE_DATA, status=status.HTTP_200_OK)
             response.set_cookie(
-                "refresh_token", serializer.validated_data.get("refresh"), httponly=True
+                "refresh_token", 
+                serializer.validated_data.get("refresh"), 
+                httponly=True,
+                secure=True
             )
             return response
 
@@ -100,16 +123,39 @@ class RefreshTokenView(TokenRefreshView):
             logger.error(str(exe), exc_info=True)
             raise APIException(exe.detail)
 
-
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def post(self, request, format=None):
+    @extend_schema(
+        summary="Logout",
+        description="Logout the authenticated user by blacklisting their refresh token.",
+        tags=["Authentication"],
+        request=OpenApiTypes.NONE,  # No request body needed
+        responses={
+            200: OpenApiTypes.OBJECT,
+            400: OpenApiTypes.OBJECT,
+        },
+        examples=[
+            OpenApiExample(
+                'Successful Response',
+                value={'detail': 'User logout successfully.'},
+                response_only=True,
+                status_codes=['200']
+            ),
+            OpenApiExample(
+                'Error Response',
+                value={'detail': 'Error message'},
+                response_only=True,
+                status_codes=['400']
+            ),
+        ]
+    )
+    def post(self, request):
         try:
             token = get_refresh_token(request)
             old_refresh = RefreshToken(token)
             old_refresh.blacklist()
-            return handle_success_response(None, 'User logout successfully.')
+            return Response({"detail": "User logout successfully."}, status=status.HTTP_200_OK)
 
         except APIException as exe:
             logger.error(str(exe), exc_info=True)

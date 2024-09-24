@@ -18,6 +18,17 @@
 ### Setup `.env`
 > To access the secrets, create an .env file in the backend directory
 
+### Set SECRET_KEY
+A SECRET_KEY is mandatory for Django's security features. You can generate one by:
+1. Running this Python command:
+   ```
+   python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+   ```
+2. Or by typing a long, random string of letters, numbers, and symbols.
+
+Add the generated key to your `.env` file:
+> SECRET_KEY="your_generated_secret_key_here"
+
 ### For Database setup
 By default, django is setup with `sqlite3`. For this project, set `DATABASE_URL` in your `.env` to set the database
 
@@ -44,6 +55,25 @@ Note that four `/` after `sqlite:` are mandatory
 
 
 Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+
+### API Documentation
+
+The API documentation for this project is available using two different interfaces. You can access them when the server is running:
+
+1. Swagger UI:
+   Navigate to [http://127.0.0.1:8000/api/swagger/](http://127.0.0.1:8000/api/swagger/)
+   This provides an interactive interface where you can explore and test the API endpoints.
+
+2. ReDoc:
+   For a more user-friendly, easy-to-read documentation, visit [http://127.0.0.1:8000/api/redoc/](http://127.0.0.1:8000/api/redoc/)
+
+These documentation pages offer:
+- A comprehensive list of all available API endpoints
+- Detailed information about request/response formats
+- The ability to try out API calls directly from the browser (Swagger UI)
+- Authentication requirements for protected endpoints
+- A clear, organized view of the API structure (ReDoc)
 
 
 ## 🖼 Frontend
