@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from .permissions import IsNotAllowedToDestroy, IsNotItemAlreadyInCart
 from .models import *
 from .permissions import IsNotAllowedToDestroy
+from .models import *
 from .serializers import *
 
 

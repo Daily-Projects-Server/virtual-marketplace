@@ -20,7 +20,7 @@ class CartSerializer(serializers.ModelSerializer):
     #    response['cart_items'] = CartItemSerializer(instance.cartitem_set.all(), many=True).data
     #    return response
 
-    #def to_representation(self, instance):
+    # def to_representation(self, instance):
     #    response = super().to_representation(instance)
     #    response['cart_items'] = CartItemSerializer(instance.cartitem_set.all(), many=True).data
     #    return response
@@ -106,21 +106,23 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     # Add the listing and the cart when user posts
     def create(self, validated_data):
-        listing = validated_data.pop('listing')
-        cart = validated_data.pop('cart')
+        listing = validated_data.pop("listing")
+        cart = validated_data.pop("cart")
         cart_item = CartItem.objects.create(**validated_data)
         cart_item.listing.set([listing.id])
         cart_item.cart.set([cart.id])
         return cart_item
 
     def validate(self, attrs):
-        listing = Listing.objects.filter(id=int(attrs['listing'][0].id)).first()
-        cart = Cart.objects.filter(id=int(attrs['cart'][0].id)).first()
-        quantity = int(attrs['quantity'])
+        listing = Listing.objects.filter(id=int(attrs["listing"][0].id)).first()
+        cart = Cart.objects.filter(id=int(attrs["cart"][0].id)).first()
+        quantity = int(attrs["quantity"])
 
         # Check the quantity of the listing
         if quantity > listing.quantity:
-            raise serializers.ValidationError("Quantity is greater than the available quantity")
+            raise serializers.ValidationError(
+                "Quantity is greater than the available quantity"
+            )
         elif quantity < 1:
             raise serializers.ValidationError("Quantity cannot be less than 1")
 
