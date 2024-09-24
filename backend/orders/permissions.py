@@ -31,4 +31,13 @@ class IsNotItemAlreadyInCart(permissions.BasePermission):
             return not CartItem.objects.filter(cart=cart, listing=listing).exists()
         
         return True
+    
+    #def has_object_permission(self, request, view, obj):
+    #    if request.method == 'POST':
+    #        listing = request.data.get('listing')
+    #        if listing is None:
+    #            return False
+    #        print(f"Comparison: {obj.listing.id, listing}")
+    #        return obj.listing.id != int(listing)
+    #    return True
         
