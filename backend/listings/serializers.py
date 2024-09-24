@@ -33,4 +33,4 @@ class CategorySerializer(serializers.ModelSerializer):
 class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
-        fields = ['user', 'listing']
+        fields = ["user", "listing"]
