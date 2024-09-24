@@ -19,15 +19,7 @@
       <sourceFolder url="file://$MODULE_DIR$/backend/api" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.12 (virtualmarketplace)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.12 (Python Problems)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-  </component>
-  <component name="TemplatesService">
-    <option name="TEMPLATE_CONFIGURATION" value="Django" />
-    <option name="TEMPLATE_FOLDERS">
-      <list>
-        <option value="$MODULE_DIR$/templates" />
-      </list>
-    </option>
   </component>
 </module>
