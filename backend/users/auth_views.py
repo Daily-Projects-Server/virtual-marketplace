@@ -112,7 +112,10 @@ class RefreshTokenView(TokenRefreshView):
             }
             response = Response(RESPONSE_DATA, status=status.HTTP_200_OK)
             response.set_cookie(
-                "refresh_token", serializer.validated_data.get("refresh"), httponly=True
+                "refresh_token", 
+                serializer.validated_data.get("refresh"), 
+                httponly=True,
+                secure=True
             )
             return response
 
