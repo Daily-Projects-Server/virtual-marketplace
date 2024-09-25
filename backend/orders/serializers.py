@@ -15,16 +15,6 @@ class CartSerializer(serializers.ModelSerializer):
         model = Cart
         fields = "__all__"
 
-    # def to_representation(self, instance):
-    #    response = super().to_representation(instance)
-    #    response['cart_items'] = CartItemSerializer(instance.cartitem_set.all(), many=True).data
-    #    return response
-
-    #def to_representation(self, instance):
-    #    response = super().to_representation(instance)
-    #    response['cart_items'] = CartItemSerializer(instance.cartitem_set.all(), many=True).data
-    #    return response
-
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -45,6 +35,16 @@ class CartItemSerializer(serializers.ModelSerializer):
         cart = attrs["cart"]
         quantity = int(attrs["quantity"])
 
+        # Check  if the listing and cart are valid
+        if not Listing.objects.filter(id=listing.id).exists():
+            raise serializers.ValidationError("Listing does not exist")
+        if not Cart.objects.filter(id=cart.id).exists():
+            raise serializers.ValidationError("Cart does not exist")
+        
+        # Check if the listing is active
+        if not listing.active:
+            raise serializers.ValidationError("Listing is not active")
+
         # Check the quantity of the listing
         if quantity > listing.quantity:
             raise serializers.ValidationError(
@@ -52,14 +52,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             )
         elif quantity < 1:
             raise serializers.ValidationError("Quantity cannot be less than 1")
-
-        # Check if the cart exists
-        if not Cart.objects.filter(id=cart.id).exists():
-            raise serializers.ValidationError("Cart does not exist")
-
-        # Check the listing
-        if not listing.active:
-            raise serializers.ValidationError("Listing is not active")
+        
         return attrs
 
 
