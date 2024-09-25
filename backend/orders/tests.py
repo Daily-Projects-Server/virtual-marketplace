@@ -7,7 +7,7 @@ from django.urls import reverse
 from listings.models import Listing, Category
 from users.models import User
 from orders.models import Cart, CartItem
-from users.tests import login
+from users.common_for_tests import login
 
 
 # Fixtures
