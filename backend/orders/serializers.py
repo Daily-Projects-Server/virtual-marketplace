@@ -191,6 +191,16 @@ class CartItemSerializer(serializers.ModelSerializer):
         cart = attrs["cart"]
         quantity = int(attrs["quantity"])
 
+        # Check  if the listing and cart are valid
+        if not Listing.objects.filter(id=listing.id).exists():
+            raise serializers.ValidationError("Listing does not exist")
+        if not Cart.objects.filter(id=cart.id).exists():
+            raise serializers.ValidationError("Cart does not exist")
+        
+        # Check if the listing is active
+        if not listing.active:
+            raise serializers.ValidationError("Listing is not active")
+
         # Check the quantity of the listing
         if quantity > listing.quantity:
             raise serializers.ValidationError(
