@@ -162,3 +162,13 @@ class TestCart:
         response = client.put(cart_item_url, data)
         assert response.status_code == 200
         assert CartItem.objects.get(id=cart_item.id).quantity == 2
+
+        # Try to update the quantity to a value greater than the available quantity
+        data["quantity"] = 11
+        response = client.put(cart_item_url, data)
+        assert response.status_code == 400
+
+        # Try to update the quantity to a value less than 1
+        data["quantity"] = 0
+        response = client.put(cart_item_url, data)
+        assert response.status_code == 400
