@@ -12,7 +12,7 @@ from django.urls import reverse
 
 class TestCartItem:
     @pytest.fixture()
-    def test_user(self, request):
+    def user_fixture(self, request):
         user = User.objects.create_user(
             email="TEST@EXAMPLE.COM",
             password="password123",
@@ -23,7 +23,7 @@ class TestCartItem:
         return user
 
     @pytest.fixture()
-    def test_listing(self, request, test_user):
+    def test_listing(self, request, user_fixture):
         listing = Listing.objects.create(
             title="Test Listing",
             image="/test.jpg",
@@ -31,17 +31,17 @@ class TestCartItem:
             price=100.00,
             category=Category.objects.create(name="test", description="test"),
             quantity=10,
-            owner_id=test_user.id,
+            owner_id=user_fixture.id,
         )
         request.addfinalizer(listing.delete)
         return listing
 
     @pytest.fixture()
-    def test_cart(self, test_user):
-        return Cart.objects.get(buyer=test_user)
+    def test_cart(self, user_fixture):
+        return Cart.objects.get(buyer=user_fixture)
 
     @pytest.mark.django_db
-    def test_cart_item_model(self, test_user, test_listing, test_cart):
+    def test_cart_item_model(self, user_fixture, test_listing, test_cart):
         cart_item = CartItem.objects.create(
             quantity=1, cart=test_cart, listing=test_listing
         )
@@ -53,7 +53,7 @@ class TestCartItem:
 
 class TestCart:
     @pytest.fixture()
-    def test_user(self, request):
+    def user_fixture(self, request):
         user = User.objects.create_user(
             email="TEST@EXAMPLE.COM",
             password="password123",
@@ -64,7 +64,7 @@ class TestCart:
         return user
 
     @pytest.fixture()
-    def test_listing(self, request, test_user):
+    def test_listing(self, request, user_fixture):
         listing = Listing.objects.create(
             title="Test Listing",
             image="/test.jpg",
@@ -72,26 +72,42 @@ class TestCart:
             price=100.00,
             category=Category.objects.create(name="test", description="test"),
             quantity=10,
-            owner_id=test_user.id,
+            owner_id=user_fixture.id,
         )
         request.addfinalizer(listing.delete)
         return listing
 
     @pytest.fixture()
-    def test_cart(self, test_user):
-        return Cart.objects.get(buyer=test_user)
-
+    def test_cart(self, user_fixture):
+        return Cart.objects.get(buyer=user_fixture)
 
     @pytest.mark.django_db
-    def test_cart_model(self, test_user):
+    def test_cart_model(self, user_fixture):
         assert Cart.objects.count() == 1
 
+    @pytest.mark.django_db
+    def test_get_cart_items(self, user_fixture, test_cart, test_listing):
+        client = APIClient()
+        login(user_fixture, client)
+        CartItem.objects.create(quantity=1, cart=test_cart, listing=test_listing)
+
+        # List
+        cart_item_url = reverse("cart-item-list")
+        response = client.get(cart_item_url)
+        assert response.status_code == 200
+        assert len(response.data) == 1
+
+        # Retrieve
+        cart_item = CartItem.objects.get(cart=test_cart, listing=test_listing)
+        cart_item_url = reverse("cart-item-detail", args=[cart_item.id])
+        response = client.get(cart_item_url)
+        assert response.status_code == 200
 
     @pytest.mark.django_db
-    def test_add_item_to_cart(self, test_user, test_cart):
+    def test_add_item_to_cart(self, user_fixture, test_cart):
         # Login as test user
         client = APIClient()
-        login(test_user, client)
+        login(user_fixture, client)
         users_url = reverse("user-list")
         assert client.get(users_url).status_code == 200
 
@@ -117,6 +133,7 @@ class TestCart:
             data,
         )
         assert response.status_code == 201
+        assert CartItem.objects.filter(cart=test_cart, listing=listing).exists()
 
         # Try to add the same item to the cart
         response = client.post(
@@ -125,11 +142,10 @@ class TestCart:
         )
         assert response.status_code == 403
 
-
     @pytest.mark.django_db
-    def test_remove_item_from_cart(self, test_user, test_cart, test_listing):
+    def test_remove_item_from_cart(self, user_fixture, test_cart, test_listing):
         client = APIClient()
-        login(test_user, client)
+        login(user_fixture, client)
         cart_item_url = reverse("cart-item-list")
         response = client.post(
             cart_item_url,
@@ -142,14 +158,11 @@ class TestCart:
         response = client.delete(cart_item_url)
         assert response.status_code == 204
 
-
     @pytest.mark.django_db
-    def test_update_cart_item(self, test_user, test_cart, test_listing):
+    def test_update_cart_item(self, user_fixture, test_cart, test_listing):
         client = APIClient()
-        CartItem.objects.create(
-            quantity=1, cart=test_cart, listing=test_listing
-        )
-        login(test_user, client)
+        CartItem.objects.create(quantity=1, cart=test_cart, listing=test_listing)
+        login(user_fixture, client)
 
         cart_item = CartItem.objects.get(cart=test_cart, listing=test_listing)
         cart_item_url = reverse("cart-item-detail", args=[cart_item.id])
