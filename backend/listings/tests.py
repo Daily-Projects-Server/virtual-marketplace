@@ -12,7 +12,9 @@ class TestListingsModel:
 
     @pytest.fixture()
     def category(self):
-        return Category.objects.create(name="Test Category", description="Test Description")
+        return Category.objects.create(
+            name="Test Category", description="Test Description"
+        )
 
     @pytest.mark.django_db
     def test_listing_model(self, owner, category):
@@ -23,7 +25,7 @@ class TestListingsModel:
             price=100.00,
             quantity=10,
             owner_id=owner.id,
-            category=category
+            category=category,
         )
         listing.save()
 
@@ -45,7 +47,7 @@ class TestListingsModel:
             price=-100.00,
             quantity=-10,
             owner_id=owner.id,
-            category=category
+            category=category,
         )
         with pytest.raises(ValidationError) as e:
             listing.clean()
@@ -62,7 +64,7 @@ class TestListingsModel:
             price=100.00,
             quantity=0,
             owner_id=owner.id,
-            category=category
+            category=category,
         )
         listing.save()
         assert listing.active is False
@@ -79,7 +81,7 @@ class TestListingsModel:
             price=100.00,
             quantity=10,
             owner_id=owner.id,
-            category=category
+            category=category,
         )
         listing1.save()
         listing2 = Listing(
@@ -89,7 +91,7 @@ class TestListingsModel:
             price=100.00,
             quantity=10,
             owner_id=owner.id,
-            category=category
+            category=category,
         )
         listing2.save()
         assert Listing.objects.filter(owner_id=owner.id).count() == 2

@@ -8,6 +8,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from django.conf import settings
 
 from listings.models import Listing, Category
+from orders.models import Cart
 from .models import Settings
 
 
@@ -115,6 +116,13 @@ class TestUserModel:
         test_user = User.objects.create_user(email="test@test.com", password="password123")
         test_user.delete()
         assert Settings.objects.count() == 1
+
+    @pytest.mark.django_db
+    def test_if_cart_is_created_when_user_is_created(self, test_user):
+        assert test_user.cart is not None
+        assert test_user.cart.buyer == test_user
+        assert test_user.cart.cartitem_set.count() == 0
+        assert Cart.objects.count() == 1
 
 
 class TestUserViews:

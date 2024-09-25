@@ -5,9 +5,9 @@ from . import views
 router = DefaultRouter()
 router.register(r"transactions", views.TransactionViewSet)
 router.register(r"cart", views.CartViewSet)
-router.register(r"cart-items", views.CartItemViewSet)
+router.register(r"cart-item", views.CartItemViewSet, basename="cart-item")
 router.register(r"coupons", views.CouponViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path("", include(router.urls)),
 ]

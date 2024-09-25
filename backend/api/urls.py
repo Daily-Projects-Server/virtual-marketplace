@@ -4,6 +4,7 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from .auth_views import TaggedTokenObtainPairView, TaggedTokenRefreshView
 
+
 urlpatterns = [
     path('api/', include([
         path('', include('users.urls')),
@@ -16,5 +17,3 @@ urlpatterns = [
         path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     ])),
 ]
-
-
