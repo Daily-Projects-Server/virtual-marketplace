@@ -1,9 +1,0 @@
-{
-    "python.testing.pytestArgs": [
-        "backend/users/tests.py",
-        "backend/orders/tests.py",
-        "backend/listings/tests.py",
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true,
-}
