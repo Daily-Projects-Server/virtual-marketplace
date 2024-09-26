@@ -246,7 +246,7 @@ class RefreshTokenView(TokenRefreshView):
 
         except APIException as exe:
             logger.error(str(exe), exc_info=True)
-            return Response({"detail": str(exe)}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "An internal error has occurred."}, status=status.HTTP_401_UNAUTHORIZED)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -291,4 +291,4 @@ class LogoutView(APIView):
 
         except APIException as exe:
             logger.error(str(exe), exc_info=True)
-            raise APIException(exe.detail)
+            raise APIException("An internal error has occurred.")
