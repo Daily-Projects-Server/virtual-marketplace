@@ -1,10 +1,10 @@
 import logging
 from datetime import datetime
 
+
 from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
 from django.conf import settings
-
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -283,13 +283,12 @@ class LogoutView(APIView):
     )
     def post(self, request):
         try:
-            refresh_token = request.data.get('refresh_token')
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            
-            response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
-            response.delete_cookie(settings.REFRESH_TOKEN_COOKIE)
-            return response
+            token = get_refresh_token(request)
+            old_refresh = RefreshToken(token)
+            old_refresh.blacklist()
+            #TODO: delete refresh token from cookie
+            return Response({"detail": "User logged out successfully."}, status=status.HTTP_200_OK)
 
-        except TokenError as e:
-            return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except APIException as exe:
+            logger.error(str(exe), exc_info=True)
+            raise APIException(exe.detail)
