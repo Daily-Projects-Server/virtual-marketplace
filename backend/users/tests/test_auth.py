@@ -7,8 +7,8 @@ from rest_framework_simplejwt.exceptions import TokenError
 
 # Local imports
 from orders.models import Cart
-from .models import Settings
-from .common_for_tests import User, user_fixture, superuser_fixture
+from users.models import Settings
+from users.common_for_tests import User, user_fixture, superuser_fixture
 
 
 class TestUserModel:
