@@ -1,9 +1,15 @@
 from rest_framework import viewsets
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 from rest_framework.permissions import IsAuthenticated
 
 from ..models import Favorite
 from ..serializers import FavoriteSerializer
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -15,23 +21,23 @@ from ..serializers import FavoriteSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
                                 "user": 1,
                                 "listing": 1,
-                                "created_at": "2023-06-15T10:30:00Z"
+                                "created_at": "2023-06-15T10:30:00Z",
                             },
                             {
                                 "id": 2,
                                 "user": 1,
                                 "listing": 3,
-                                "created_at": "2023-06-16T14:45:00Z"
-                            }
-                        ]
+                                "created_at": "2023-06-16T14:45:00Z",
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -48,15 +54,15 @@ from ..serializers import FavoriteSerializer
                 description="Favorite created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "user": 1,
                             "listing": 5,
-                            "created_at": "2023-06-17T09:00:00Z"
-                        }
+                            "created_at": "2023-06-17T09:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -72,15 +78,15 @@ from ..serializers import FavoriteSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "listing": 1,
-                            "created_at": "2023-06-15T10:30:00Z"
-                        }
+                            "created_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -98,15 +104,15 @@ from ..serializers import FavoriteSerializer
                 description="Favorite updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "listing": 2,
-                            "created_at": "2023-06-15T10:30:00Z"
-                        }
+                            "created_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -124,15 +130,15 @@ from ..serializers import FavoriteSerializer
                 description="Favorite partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "listing": 2,
-                            "created_at": "2023-06-15T10:30:00Z"
-                        }
+                            "created_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),

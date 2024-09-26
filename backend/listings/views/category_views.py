@@ -1,5 +1,10 @@
 from rest_framework import viewsets
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 from rest_framework.permissions import (
     IsAdminUser,
 )
@@ -23,23 +28,23 @@ from ..serializers import CategorySerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
                                 "name": "Electronics",
                                 "description": "Electronic devices and gadgets",
-                                "parent": None
+                                "parent": None,
                             },
                             {
                                 "id": 2,
                                 "name": "Clothing",
                                 "description": "Apparel and accessories",
-                                "parent": None
-                            }
-                        ]
+                                "parent": None,
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -56,15 +61,15 @@ from ..serializers import CategorySerializer
                 description="Category created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "name": "Books",
                             "description": "Various types of books",
-                            "parent": None
-                        }
+                            "parent": None,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -81,15 +86,15 @@ from ..serializers import CategorySerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "name": "Electronics",
                             "description": "Electronic devices and gadgets",
-                            "parent": None
-                        }
+                            "parent": None,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -107,15 +112,15 @@ from ..serializers import CategorySerializer
                 description="Category updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "name": "Electronics and Gadgets",
                             "description": "Updated description for electronic devices",
-                            "parent": None
-                        }
+                            "parent": None,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -134,15 +139,15 @@ from ..serializers import CategorySerializer
                 description="Category partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "name": "Electronics",
                             "description": "Updated description for electronic devices",
-                            "parent": None
-                        }
+                            "parent": None,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),

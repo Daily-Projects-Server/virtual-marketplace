@@ -1,11 +1,19 @@
 # Rest
 from rest_framework import viewsets, permissions
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample, OpenApiParameter, OpenApiTypes
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+    OpenApiParameter,
+    OpenApiTypes,
+)
 
 # Local
 from ..permissions import IsAllowedToReview, IsAllowedToDestroyReview
 from ..serializers import ReviewSerializer
 from ..models import Review
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -17,7 +25,7 @@ from ..models import Review
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
@@ -25,7 +33,7 @@ from ..models import Review
                                 "listing": 1,
                                 "rating": 5,
                                 "comment": "Great product!",
-                                "created_at": "2023-06-15T10:30:00Z"
+                                "created_at": "2023-06-15T10:30:00Z",
                             },
                             {
                                 "id": 2,
@@ -33,16 +41,16 @@ from ..models import Review
                                 "listing": 1,
                                 "rating": 4,
                                 "comment": "Good value for money.",
-                                "created_at": "2023-06-16T14:45:00Z"
-                            }
-                        ]
+                                "created_at": "2023-06-16T14:45:00Z",
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
         },
-        tags=["Reviews"]
+        tags=["Reviews"],
     ),
     create=extend_schema(
         summary="Create a new review",
@@ -54,29 +62,34 @@ from ..models import Review
                 description="Review created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "user": 3,
                             "listing": 2,
                             "rating": 5,
                             "comment": "Excellent service!",
-                            "created_at": "2023-06-17T09:00:00Z"
-                        }
+                            "created_at": "2023-06-17T09:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
             403: OpenApiResponse(description="Forbidden"),
         },
-        tags=["Reviews"]
+        tags=["Reviews"],
     ),
     retrieve=extend_schema(
         summary="Retrieve a review",
         description="Get details of a specific review by ID.",
         parameters=[
-            OpenApiParameter(name='id', type=OpenApiTypes.INT, location=OpenApiParameter.PATH, description='A unique integer value identifying this review.')
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.PATH,
+                description="A unique integer value identifying this review.",
+            )
         ],
         responses={
             200: OpenApiResponse(
@@ -84,28 +97,33 @@ from ..models import Review
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "listing": 1,
                             "rating": 5,
                             "comment": "Great product!",
-                            "created_at": "2023-06-15T10:30:00Z"
-                        }
+                            "created_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             404: OpenApiResponse(description="Review not found"),
         },
-        tags=["Reviews"]
+        tags=["Reviews"],
     ),
     update=extend_schema(
         summary="Update a review",
         description="Update details of a specific review by ID.",
         request=ReviewSerializer,
         parameters=[
-            OpenApiParameter(name='id', type=OpenApiTypes.INT, location=OpenApiParameter.PATH, description='A unique integer value identifying this review.')
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.PATH,
+                description="A unique integer value identifying this review.",
+            )
         ],
         responses={
             200: OpenApiResponse(
@@ -113,31 +131,36 @@ from ..models import Review
                 description="Review updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "listing": 1,
                             "rating": 4,
                             "comment": "Good product, but could be better.",
-                            "created_at": "2023-06-15T10:30:00Z"
-                        }
+                            "created_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
             403: OpenApiResponse(description="Forbidden"),
             404: OpenApiResponse(description="Review not found"),
         },
-        tags=["Reviews"]
+        tags=["Reviews"],
     ),
     partial_update=extend_schema(
         summary="Partially update a review",
         description="Partially update details of a specific review by ID.",
         request=ReviewSerializer,
         parameters=[
-            OpenApiParameter(name='id', type=OpenApiTypes.INT, location=OpenApiParameter.PATH, description='A unique integer value identifying this review.')
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.PATH,
+                description="A unique integer value identifying this review.",
+            )
         ],
         responses={
             200: OpenApiResponse(
@@ -145,30 +168,35 @@ from ..models import Review
                 description="Review partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "listing": 1,
                             "rating": 4,
                             "comment": "Updated comment",
-                            "created_at": "2023-06-15T10:30:00Z"
-                        }
+                            "created_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
             403: OpenApiResponse(description="Forbidden"),
             404: OpenApiResponse(description="Review not found"),
         },
-        tags=["Reviews"]
+        tags=["Reviews"],
     ),
     destroy=extend_schema(
         summary="Delete a review",
         description="Delete a specific review by ID.",
         parameters=[
-            OpenApiParameter(name='id', type=OpenApiTypes.INT, location=OpenApiParameter.PATH, description='A unique integer value identifying this review.')
+            OpenApiParameter(
+                name="id",
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.PATH,
+                description="A unique integer value identifying this review.",
+            )
         ],
         responses={
             204: OpenApiResponse(description="Review deleted successfully"),
@@ -176,7 +204,7 @@ from ..models import Review
             403: OpenApiResponse(description="Forbidden"),
             404: OpenApiResponse(description="Review not found"),
         },
-        tags=["Reviews"]
+        tags=["Reviews"],
     ),
 )
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -185,5 +213,5 @@ class ReviewViewSet(viewsets.ModelViewSet):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
         IsAllowedToReview,
-        IsAllowedToDestroyReview
+        IsAllowedToDestroyReview,
     ]

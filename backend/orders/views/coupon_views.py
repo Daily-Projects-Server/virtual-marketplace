@@ -1,8 +1,14 @@
 from rest_framework import viewsets
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 
 from ..models import Coupon
 from ..serializers import CouponSerializer
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -14,7 +20,7 @@ from ..serializers import CouponSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
@@ -22,7 +28,7 @@ from ..serializers import CouponSerializer
                                 "discount_percent": 20,
                                 "valid_from": "2023-06-01T00:00:00Z",
                                 "valid_to": "2023-08-31T23:59:59Z",
-                                "is_active": True
+                                "is_active": True,
                             },
                             {
                                 "id": 2,
@@ -30,11 +36,11 @@ from ..serializers import CouponSerializer
                                 "discount_percent": 10,
                                 "valid_from": "2023-01-01T00:00:00Z",
                                 "valid_to": "2023-12-31T23:59:59Z",
-                                "is_active": True
-                            }
-                        ]
+                                "is_active": True,
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -51,17 +57,17 @@ from ..serializers import CouponSerializer
                 description="Coupon created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "code": "NEWYEAR2024",
                             "discount_percent": 15,
                             "valid_from": "2024-01-01T00:00:00Z",
                             "valid_to": "2024-01-31T23:59:59Z",
-                            "is_active": True
-                        }
+                            "is_active": True,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -78,17 +84,17 @@ from ..serializers import CouponSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "code": "SUMMER2023",
                             "discount_percent": 20,
                             "valid_from": "2023-06-01T00:00:00Z",
                             "valid_to": "2023-08-31T23:59:59Z",
-                            "is_active": True
-                        }
+                            "is_active": True,
+                        },
                     )
-                ]
+                ],
             ),
             404: OpenApiResponse(description="Coupon not found"),
         },
@@ -104,17 +110,17 @@ from ..serializers import CouponSerializer
                 description="Coupon updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "code": "SUMMER2023_EXTENDED",
                             "discount_percent": 25,
                             "valid_from": "2023-06-01T00:00:00Z",
                             "valid_to": "2023-09-30T23:59:59Z",
-                            "is_active": True
-                        }
+                            "is_active": True,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -133,17 +139,17 @@ from ..serializers import CouponSerializer
                 description="Coupon partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "code": "SUMMER2023",
                             "discount_percent": 20,
                             "valid_from": "2023-06-01T00:00:00Z",
                             "valid_to": "2023-09-15T23:59:59Z",
-                            "is_active": True
-                        }
+                            "is_active": True,
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),

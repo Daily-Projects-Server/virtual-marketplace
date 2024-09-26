@@ -1,9 +1,15 @@
 from rest_framework import viewsets
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 
 from ..permissions import IsNotAllowedToDestroy
 from ..models import Cart
 from ..serializers import CartSerializer
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -15,32 +21,30 @@ from ..serializers import CartSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
                                 "user": 1,
                                 "items": [
                                     {"id": 1, "listing": 1, "quantity": 2},
-                                    {"id": 2, "listing": 3, "quantity": 1}
+                                    {"id": 2, "listing": 3, "quantity": 1},
                                 ],
                                 "total": "150.00",
                                 "created_at": "2023-06-15T10:30:00Z",
-                                "updated_at": "2023-06-15T10:30:00Z"
+                                "updated_at": "2023-06-15T10:30:00Z",
                             },
                             {
                                 "id": 2,
                                 "user": 2,
-                                "items": [
-                                    {"id": 3, "listing": 2, "quantity": 1}
-                                ],
+                                "items": [{"id": 3, "listing": 2, "quantity": 1}],
                                 "total": "75.00",
                                 "created_at": "2023-06-15T11:00:00Z",
-                                "updated_at": "2023-06-15T11:00:00Z"
-                            }
-                        ]
+                                "updated_at": "2023-06-15T11:00:00Z",
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -57,17 +61,17 @@ from ..serializers import CartSerializer
                 description="Cart created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "user": 3,
                             "items": [],
                             "total": "0.00",
                             "created_at": "2023-06-15T12:00:00Z",
-                            "updated_at": "2023-06-15T12:00:00Z"
-                        }
+                            "updated_at": "2023-06-15T12:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -83,20 +87,20 @@ from ..serializers import CartSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "items": [
                                 {"id": 1, "listing": 1, "quantity": 2},
-                                {"id": 2, "listing": 3, "quantity": 1}
+                                {"id": 2, "listing": 3, "quantity": 1},
                             ],
                             "total": "150.00",
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T10:30:00Z"
-                        }
+                            "updated_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             404: OpenApiResponse(description="Cart not found"),
         },
@@ -112,20 +116,20 @@ from ..serializers import CartSerializer
                 description="Cart updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "items": [
                                 {"id": 1, "listing": 1, "quantity": 3},
-                                {"id": 2, "listing": 3, "quantity": 2}
+                                {"id": 2, "listing": 3, "quantity": 2},
                             ],
                             "total": "225.00",
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T13:00:00Z"
-                        }
+                            "updated_at": "2023-06-15T13:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -143,20 +147,20 @@ from ..serializers import CartSerializer
                 description="Cart partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "items": [
                                 {"id": 1, "listing": 1, "quantity": 2},
-                                {"id": 2, "listing": 3, "quantity": 2}
+                                {"id": 2, "listing": 3, "quantity": 2},
                             ],
                             "total": "175.00",
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T14:00:00Z"
-                        }
+                            "updated_at": "2023-06-15T14:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),

@@ -1,13 +1,19 @@
 # Rest
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 from drf_spectacular.types import OpenApiTypes
 
 # Local
 from ..permissions import IsOwnerOrReadOnly
 from ..serializers import AddressSerializer
 from ..models import Address
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -19,7 +25,7 @@ from ..models import Address
                 description="Successful retrieval of addresses",
                 examples=[
                     OpenApiExample(
-                        'Successful Response',
+                        "Successful Response",
                         value=[
                             {
                                 "id": 1,
@@ -28,7 +34,7 @@ from ..models import Address
                                 "state": "CA",
                                 "zip_code": "12345",
                                 "country": "USA",
-                                "user": 1
+                                "user": 1,
                             },
                             {
                                 "id": 2,
@@ -37,26 +43,28 @@ from ..models import Address
                                 "state": "NY",
                                 "zip_code": "67890",
                                 "country": "USA",
-                                "user": 2
-                            }
+                                "user": 2,
+                            },
                         ],
-                        status_codes=['200']
+                        status_codes=["200"],
                     ),
-                ]
+                ],
             ),
             401: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Unauthorized",
                 examples=[
                     OpenApiExample(
-                        'Unauthorized',
-                        value={"detail": "Authentication credentials were not provided."},
-                        status_codes=['401']
+                        "Unauthorized",
+                        value={
+                            "detail": "Authentication credentials were not provided."
+                        },
+                        status_codes=["401"],
                     ),
-                ]
+                ],
             ),
         },
-        tags=["Addresses"]
+        tags=["Addresses"],
     ),
     create=extend_schema(
         summary="Create a new address",
@@ -68,7 +76,7 @@ from ..models import Address
                 description="Address created successfully",
                 examples=[
                     OpenApiExample(
-                        'Successful Response',
+                        "Successful Response",
                         value={
                             "id": 3,
                             "street": "789 Oak St",
@@ -76,36 +84,38 @@ from ..models import Address
                             "state": "TX",
                             "zip_code": "54321",
                             "country": "USA",
-                            "user": 1
+                            "user": 1,
                         },
-                        status_codes=['201']
+                        status_codes=["201"],
                     ),
-                ]
+                ],
             ),
             400: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Bad Request",
                 examples=[
                     OpenApiExample(
-                        'Bad Request',
+                        "Bad Request",
                         value={"street": ["This field is required."]},
-                        status_codes=['400']
+                        status_codes=["400"],
                     ),
-                ]
+                ],
             ),
             401: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Unauthorized",
                 examples=[
                     OpenApiExample(
-                        'Unauthorized',
-                        value={"detail": "Authentication credentials were not provided."},
-                        status_codes=['401']
+                        "Unauthorized",
+                        value={
+                            "detail": "Authentication credentials were not provided."
+                        },
+                        status_codes=["401"],
                     ),
-                ]
+                ],
             ),
         },
-        tags=["Addresses"]
+        tags=["Addresses"],
     ),
     retrieve=extend_schema(
         summary="Retrieve an address",
@@ -116,7 +126,7 @@ from ..models import Address
                 description="Successful retrieval of address",
                 examples=[
                     OpenApiExample(
-                        'Successful Response',
+                        "Successful Response",
                         value={
                             "id": 1,
                             "street": "123 Main St",
@@ -124,25 +134,25 @@ from ..models import Address
                             "state": "CA",
                             "zip_code": "12345",
                             "country": "USA",
-                            "user": 1
+                            "user": 1,
                         },
-                        status_codes=['200']
+                        status_codes=["200"],
                     ),
-                ]
+                ],
             ),
             404: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Not Found",
                 examples=[
                     OpenApiExample(
-                        'Not Found',
+                        "Not Found",
                         value={"detail": "Not found."},
-                        status_codes=['404']
+                        status_codes=["404"],
                     ),
-                ]
+                ],
             ),
         },
-        tags=["Addresses"]
+        tags=["Addresses"],
     ),
     update=extend_schema(
         summary="Update an address",
@@ -154,7 +164,7 @@ from ..models import Address
                 description="Address updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Successful Response',
+                        "Successful Response",
                         value={
                             "id": 1,
                             "street": "123 Updated St",
@@ -162,36 +172,36 @@ from ..models import Address
                             "state": "CA",
                             "zip_code": "12345",
                             "country": "USA",
-                            "user": 1
+                            "user": 1,
                         },
-                        status_codes=['200']
+                        status_codes=["200"],
                     ),
-                ]
+                ],
             ),
             400: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Bad Request",
                 examples=[
                     OpenApiExample(
-                        'Bad Request',
+                        "Bad Request",
                         value={"street": ["This field may not be blank."]},
-                        status_codes=['400']
+                        status_codes=["400"],
                     ),
-                ]
+                ],
             ),
             404: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Not Found",
                 examples=[
                     OpenApiExample(
-                        'Not Found',
+                        "Not Found",
                         value={"detail": "Not found."},
-                        status_codes=['404']
+                        status_codes=["404"],
                     ),
-                ]
+                ],
             ),
         },
-        tags=["Addresses"]
+        tags=["Addresses"],
     ),
     partial_update=extend_schema(
         summary="Partially update an address",
@@ -203,7 +213,7 @@ from ..models import Address
                 description="Address partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Successful Response',
+                        "Successful Response",
                         value={
                             "id": 1,
                             "street": "123 Main St",
@@ -211,59 +221,58 @@ from ..models import Address
                             "state": "CA",
                             "zip_code": "12345",
                             "country": "USA",
-                            "user": 1
+                            "user": 1,
                         },
-                        status_codes=['200']
+                        status_codes=["200"],
                     ),
-                ]
+                ],
             ),
             400: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Bad Request",
                 examples=[
                     OpenApiExample(
-                        'Bad Request',
+                        "Bad Request",
                         value={"city": ["This field may not be blank."]},
-                        status_codes=['400']
+                        status_codes=["400"],
                     ),
-                ]
+                ],
             ),
             404: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Not Found",
                 examples=[
                     OpenApiExample(
-                        'Not Found',
+                        "Not Found",
                         value={"detail": "Not found."},
-                        status_codes=['404']
+                        status_codes=["404"],
                     ),
-                ]
+                ],
             ),
         },
-        tags=["Addresses"]
+        tags=["Addresses"],
     ),
     destroy=extend_schema(
         summary="Delete an address",
         description="Delete a specific address by ID.",
         responses={
             204: OpenApiResponse(
-                response=None,
-                description="Address deleted successfully"
+                response=None, description="Address deleted successfully"
             ),
             404: OpenApiResponse(
                 response=OpenApiTypes.OBJECT,
                 description="Not Found",
                 examples=[
                     OpenApiExample(
-                        'Not Found',
+                        "Not Found",
                         value={"detail": "Not found."},
-                        status_codes=['404']
+                        status_codes=["404"],
                     ),
-                ]
+                ],
             ),
         },
-        tags=["Addresses"]
-    )
+        tags=["Addresses"],
+    ),
 )
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()

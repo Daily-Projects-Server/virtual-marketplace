@@ -1,8 +1,14 @@
 from rest_framework import viewsets
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 
 from ..models import Transaction
 from ..serializers import TransactionSerializer
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -14,34 +20,32 @@ from ..serializers import TransactionSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
                                 "user": 1,
                                 "items": [
                                     {"id": 1, "listing": 1, "quantity": 2},
-                                    {"id": 2, "listing": 3, "quantity": 1}
+                                    {"id": 2, "listing": 3, "quantity": 1},
                                 ],
                                 "total": "150.00",
                                 "status": "completed",
                                 "created_at": "2023-06-15T10:30:00Z",
-                                "updated_at": "2023-06-15T10:30:00Z"
+                                "updated_at": "2023-06-15T10:30:00Z",
                             },
                             {
                                 "id": 2,
                                 "user": 2,
-                                "items": [
-                                    {"id": 3, "listing": 2, "quantity": 1}
-                                ],
+                                "items": [{"id": 3, "listing": 2, "quantity": 1}],
                                 "total": "75.00",
                                 "status": "pending",
                                 "created_at": "2023-06-15T11:00:00Z",
-                                "updated_at": "2023-06-15T11:00:00Z"
-                            }
-                        ]
+                                "updated_at": "2023-06-15T11:00:00Z",
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -58,20 +62,18 @@ from ..serializers import TransactionSerializer
                 description="Transaction created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "user": 3,
-                            "items": [
-                                {"id": 4, "listing": 4, "quantity": 1}
-                            ],
+                            "items": [{"id": 4, "listing": 4, "quantity": 1}],
                             "total": "100.00",
                             "status": "pending",
                             "created_at": "2023-06-16T09:00:00Z",
-                            "updated_at": "2023-06-16T09:00:00Z"
-                        }
+                            "updated_at": "2023-06-16T09:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -87,21 +89,21 @@ from ..serializers import TransactionSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "items": [
                                 {"id": 1, "listing": 1, "quantity": 2},
-                                {"id": 2, "listing": 3, "quantity": 1}
+                                {"id": 2, "listing": 3, "quantity": 1},
                             ],
                             "total": "150.00",
                             "status": "completed",
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T10:30:00Z"
-                        }
+                            "updated_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -119,21 +121,21 @@ from ..serializers import TransactionSerializer
                 description="Transaction updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "items": [
                                 {"id": 1, "listing": 1, "quantity": 3},
-                                {"id": 2, "listing": 3, "quantity": 2}
+                                {"id": 2, "listing": 3, "quantity": 2},
                             ],
                             "total": "200.00",
                             "status": "completed",
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-16T11:00:00Z"
-                        }
+                            "updated_at": "2023-06-16T11:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -151,21 +153,21 @@ from ..serializers import TransactionSerializer
                 description="Transaction partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "user": 1,
                             "items": [
                                 {"id": 1, "listing": 1, "quantity": 2},
-                                {"id": 2, "listing": 3, "quantity": 1}
+                                {"id": 2, "listing": 3, "quantity": 1},
                             ],
                             "total": "150.00",
                             "status": "shipped",
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-16T14:00:00Z"
-                        }
+                            "updated_at": "2023-06-16T14:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
