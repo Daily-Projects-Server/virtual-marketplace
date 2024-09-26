@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from listings.models import Listing
-from .models import *
+from .models import Cart, CartItem, Coupon, Transaction
 
 
 class TransactionSerializer(serializers.ModelSerializer):
