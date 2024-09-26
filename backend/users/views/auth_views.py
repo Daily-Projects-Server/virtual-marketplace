@@ -104,7 +104,7 @@ class LoginView(APIView):
 
         except APIException as exe:
             logger.error(str(exe), exc_info=True)
-            return Response({"detail": str(exe)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "An internal error has occurred."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @method_decorator(sensitive_post_parameters('password', 'confirm_password'), name="dispatch")
