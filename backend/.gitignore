@@ -6,6 +6,13 @@
 !.vscode/extensions.json
 !.vscode/html-data.json
 .history
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/html-data.json
+.vscode
+.vscode/
 
 ### Django ###
 *.log

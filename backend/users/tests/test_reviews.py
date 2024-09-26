@@ -11,7 +11,14 @@ from django.conf import settings
 from listings.models import Listing, Category
 from orders.models import Cart
 from users.models import Settings
-from users.common_for_tests import User, user_fixture, superuser_fixture, listing_fixture, login, logout
+from users.common_for_tests import (
+    User,
+    user_fixture,
+    superuser_fixture,
+    listing_fixture,
+    login,
+    logout,
+)
 
 
 class TestReviewViews:

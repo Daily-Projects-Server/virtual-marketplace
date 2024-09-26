@@ -1,9 +1,15 @@
 from rest_framework import viewsets
-from drf_spectacular.utils import extend_schema, extend_schema_view, OpenApiResponse, OpenApiExample
+from drf_spectacular.utils import (
+    extend_schema,
+    extend_schema_view,
+    OpenApiResponse,
+    OpenApiExample,
+)
 
 from ..permissions import IsNotItemAlreadyInCart
 from ..models import CartItem
 from ..serializers import CartItemSerializer
+
 
 @extend_schema_view(
     list=extend_schema(
@@ -15,7 +21,7 @@ from ..serializers import CartItemSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value=[
                             {
                                 "id": 1,
@@ -23,7 +29,7 @@ from ..serializers import CartItemSerializer
                                 "listing": 1,
                                 "quantity": 2,
                                 "created_at": "2023-06-15T10:30:00Z",
-                                "updated_at": "2023-06-15T10:30:00Z"
+                                "updated_at": "2023-06-15T10:30:00Z",
                             },
                             {
                                 "id": 2,
@@ -31,11 +37,11 @@ from ..serializers import CartItemSerializer
                                 "listing": 2,
                                 "quantity": 1,
                                 "created_at": "2023-06-15T11:00:00Z",
-                                "updated_at": "2023-06-15T11:00:00Z"
-                            }
-                        ]
+                                "updated_at": "2023-06-15T11:00:00Z",
+                            },
+                        ],
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -52,17 +58,17 @@ from ..serializers import CartItemSerializer
                 description="Cart item created successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 3,
                             "cart": 1,
                             "listing": 3,
                             "quantity": 1,
                             "created_at": "2023-06-15T12:00:00Z",
-                            "updated_at": "2023-06-15T12:00:00Z"
-                        }
+                            "updated_at": "2023-06-15T12:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -79,17 +85,17 @@ from ..serializers import CartItemSerializer
                 description="Successful response",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "cart": 1,
                             "listing": 1,
                             "quantity": 2,
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T10:30:00Z"
-                        }
+                            "updated_at": "2023-06-15T10:30:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             404: OpenApiResponse(description="Cart item not found"),
         },
@@ -105,17 +111,17 @@ from ..serializers import CartItemSerializer
                 description="Cart item updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "cart": 1,
                             "listing": 1,
                             "quantity": 3,
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T13:00:00Z"
-                        }
+                            "updated_at": "2023-06-15T13:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
@@ -134,17 +140,17 @@ from ..serializers import CartItemSerializer
                 description="Cart item partially updated successfully",
                 examples=[
                     OpenApiExample(
-                        'Example Response',
+                        "Example Response",
                         value={
                             "id": 1,
                             "cart": 1,
                             "listing": 1,
                             "quantity": 4,
                             "created_at": "2023-06-15T10:30:00Z",
-                            "updated_at": "2023-06-15T14:00:00Z"
-                        }
+                            "updated_at": "2023-06-15T14:00:00Z",
+                        },
                     )
-                ]
+                ],
             ),
             400: OpenApiResponse(description="Bad request"),
             401: OpenApiResponse(description="Unauthorized"),
