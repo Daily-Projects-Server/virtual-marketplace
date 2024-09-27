@@ -5,7 +5,7 @@ from rest_framework.authentication import (
     SessionAuthentication,
     TokenAuthentication,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ..models import Listing
 from ..serializers import ListingSerializer
@@ -60,4 +60,4 @@ class ListingViewSet(viewsets.ModelViewSet):
         SessionAuthentication,
         BasicAuthentication,
     ]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
