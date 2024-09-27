@@ -9,7 +9,7 @@ from PIL import Image
 
 from listings.models import Category, Listing
 from users.models import User
-from users.common_for_tests import login
+from conftest import login, logout
 from listings.models import Listing, Category
 
 
