@@ -1,18 +1,15 @@
-# Rest
-from rest_framework import viewsets, permissions, status
-from rest_framework.response import Response
+from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiResponse,
     extend_schema,
     extend_schema_view,
-    OpenApiResponse,
-    OpenApiExample,
 )
-from drf_spectacular.types import OpenApiTypes
+from rest_framework import permissions, viewsets
 
-# Local
+from ..models import Address
 from ..permissions import IsOwnerOrReadOnly
 from ..serializers import AddressSerializer
-from ..models import Address
 
 
 @extend_schema_view(
@@ -277,7 +274,10 @@ from ..models import Address
 class AddressViewSet(viewsets.ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        IsOwnerOrReadOnly,
+    ]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

@@ -1,18 +1,16 @@
-from rest_framework import viewsets
 from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiResponse,
     extend_schema,
     extend_schema_view,
-    OpenApiResponse,
-    OpenApiExample,
 )
-from rest_framework.permissions import (
-    IsAdminUser,
-)
+from rest_framework import viewsets
 from rest_framework.authentication import (
-    SessionAuthentication,
     BasicAuthentication,
+    SessionAuthentication,
     TokenAuthentication,
 )
+from rest_framework.permissions import IsAdminUser
 
 from ..models import Category
 from ..serializers import CategorySerializer

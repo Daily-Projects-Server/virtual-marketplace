@@ -1,14 +1,13 @@
-# Remote imports
+# noqa: F401
 import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.exceptions import TokenError
 
-# Local imports
+from conftest import User
 from orders.models import Cart
 from users.models import Settings
-from users.common_for_tests import User, user_fixture, superuser_fixture
 
 
 class TestUserModel:
@@ -46,7 +45,9 @@ class TestUserModel:
     def test_create_superuser_without_is_superuser_raises_error(self):
         with pytest.raises(ValueError, match="Superuser must have is_superuser=True."):
             User.objects.create_superuser(
-                email="admin@example.com", password="admin123", is_superuser=False
+                email="admin@example.com",
+                password="admin123",
+                is_superuser=False,
             )
 
     @pytest.mark.django_db
@@ -70,24 +71,30 @@ class TestUserModel:
     def test_total_number_of_settings_instances_are_one_when_all_users_have_default_settings(
         self,
     ):
-        User.objects.create_user(
-            email="user1@example.com",
-            password="password1",
-            first_name="John",
-            last_name="Doe",
-        ),
-        User.objects.create_user(
-            email="user2@example.com",
-            password="password2",
-            first_name="Jane",
-            last_name="Smith",
-        ),
-        User.objects.create_user(
-            email="user3@example.com",
-            password="password3",
-            first_name="Jim",
-            last_name="Beam",
-        ),
+        (
+            User.objects.create_user(
+                email="user1@example.com",
+                password="password1",
+                first_name="John",
+                last_name="Doe",
+            ),
+        )
+        (
+            User.objects.create_user(
+                email="user2@example.com",
+                password="password2",
+                first_name="Jane",
+                last_name="Smith",
+            ),
+        )
+        (
+            User.objects.create_user(
+                email="user3@example.com",
+                password="password3",
+                first_name="Jim",
+                last_name="Beam",
+            ),
+        )
         settings = Settings.objects.all()
         assert settings.count() == 1
 
@@ -178,7 +185,8 @@ class TestUserViews:
 
         # Logout with authentication
         response = client.post(
-            login_url, data={"email": user_fixture.email, "password": "password123"}
+            login_url,
+            data={"email": user_fixture.email, "password": "password123"},
         )
         client.credentials(HTTP_AUTHORIZATION=f"Bearer {response.data['access_token']}")
         assert response.status_code == status.HTTP_200_OK

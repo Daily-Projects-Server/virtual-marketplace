@@ -1,11 +1,11 @@
-from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import viewsets
 from rest_framework.authentication import (
-    SessionAuthentication,
     BasicAuthentication,
+    SessionAuthentication,
     TokenAuthentication,
 )
+from rest_framework.permissions import IsAuthenticated
 
 from ..models import Listing
 from ..serializers import ListingSerializer

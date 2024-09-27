@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from PIL import Image
 
-# Local imports
+from listings.models import Category, Listing
 from users.models import User
 from users.common_for_tests import login
 from listings.models import Listing, Category
@@ -95,10 +95,10 @@ class TestListingsModel:
         # Test listing price and quantity validation
         listing.price = -100.00
         listing.quantity = -10
-        with pytest.raises(ValidationError) as e:
+        with pytest.raises(ValidationError):
             listing.clean()
         listing.price = 100.00
-        with pytest.raises(ValidationError) as e:
+        with pytest.raises(ValidationError):
             listing.save()
 
     @pytest.mark.django_db

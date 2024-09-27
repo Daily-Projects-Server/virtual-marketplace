@@ -1,12 +1,14 @@
-from django.shortcuts import render
-from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import viewsets
 
+from .models import Cart, CartItem, Coupon, Transaction
 from .permissions import IsNotAllowedToDestroy, IsNotItemAlreadyInCart
-from .models import *
-from .permissions import IsNotAllowedToDestroy
-from .models import *
-from .serializers import *
+from .serializers import (
+    CartItemSerializer,
+    CartSerializer,
+    CouponSerializer,
+    TransactionSerializer,
+)
 
 
 @extend_schema_view(
@@ -193,4 +195,3 @@ class CartItemViewSet(viewsets.ModelViewSet):
 class CouponViewSet(viewsets.ModelViewSet):
     queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
-
