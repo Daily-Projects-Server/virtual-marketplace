@@ -1,13 +1,10 @@
-# Remote imports
 import pytest
-from rest_framework.test import APIClient
 from django.urls import reverse
+from rest_framework.test import APIClient
 
-# Local imports
-from listings.models import Listing, Category
-from users.models import User
+from conftest import User, login
+from listings.models import Category, Listing
 from orders.models import Cart, CartItem
-from users.common_for_tests import login
 
 
 # Fixtures
@@ -135,7 +132,11 @@ class TestCart:
         cart_item_url = reverse("cart-item-list")
         response = client.post(
             cart_item_url,
-            {"cart": cart_fixture.id, "listing": listing_fixture.id, "quantity": 1},
+            {
+                "cart": cart_fixture.id,
+                "listing": listing_fixture.id,
+                "quantity": 1,
+            },
         )
         assert response.status_code == 201
 

@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import *
+from rest_framework.exceptions import ValidationError
+
+from .models import Category, Favorite, Listing
 
 
 # Global functions

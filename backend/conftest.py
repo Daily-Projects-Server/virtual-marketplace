@@ -1,16 +1,14 @@
-# Remote imports
-import pytest
-from django.urls import reverse
-from django.contrib.auth import get_user_model
-from rest_framework import status
-from rest_framework.test import APIClient
-from rest_framework_simplejwt.exceptions import TokenError
-from django.conf import settings
+import os
 
-# Local imports
+import pytest
+from django.conf import settings  # noqa: F401
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from rest_framework import status
+
 from listings.models import Category, Listing
-from orders.models import Cart
-from .models import Settings
+
+os.environ["DJANGO_SETTINGS_MODULE"] = "api.settings"
 
 User = get_user_model()
 
@@ -61,7 +59,8 @@ def listing_fixture(request):
 def login(user_fixture, client):
     login_url = reverse("login")
     login_response = client.post(
-        login_url, data={"email": user_fixture.email, "password": "password123"}
+        login_url,
+        data={"email": user_fixture.email, "password": "password123"},
     )
     assert login_response.status_code == status.HTTP_200_OK
     access_token = login_response.data["access_token"]

@@ -1,12 +1,12 @@
 import logging
-from rest_framework.views import exception_handler
-from rest_framework.response import Response
+
 from rest_framework import status
 from rest_framework.exceptions import (
-    ValidationError,
     AuthenticationFailed,
     NotAuthenticated,
+    ValidationError,
 )
+from rest_framework.views import exception_handler
 from rest_framework_simplejwt.exceptions import InvalidToken
 
 logger = logging.getLogger(__name__)
@@ -24,7 +24,10 @@ def custom_exception_handler(exc, context):
         if response.status_code == status.HTTP_401_UNAUTHORIZED:
             response.data = {
                 "error": "Unauthorized access",
-                "message": "Your access token has expired or is invalid. Please login again or refresh the token.",
+                "message": (
+                    "Your access token has expired or is invalid. "
+                    "Please login again or refresh the token."
+                ),
             }
         elif response.status_code == status.HTTP_403_FORBIDDEN:
             response.data = {
@@ -44,7 +47,9 @@ def custom_exception_handler(exc, context):
         elif isinstance(exc, AuthenticationFailed):
             response.data = {
                 "error": "Authentication Failed",
-                "message": "Authentication failed. Please provide valid credentials.",
+                "message": (
+                    "Authentication failed. " "Please provide valid credentials."
+                ),
             }
         elif isinstance(exc, NotAuthenticated):
             response.data = {
@@ -54,7 +59,10 @@ def custom_exception_handler(exc, context):
         elif isinstance(exc, InvalidToken):
             response.data = {
                 "error": "Invalid Token",
-                "message": "The provided token is invalid or expired. Please refresh the token or log in again.",
+                "message": (
+                    "The provided token is invalid or expired. "
+                    "Please refresh the token or log in again."
+                ),
             }
 
     return response
