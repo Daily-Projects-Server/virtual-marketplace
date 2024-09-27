@@ -18,6 +18,14 @@ class Listing(BaseModel):
     class Meta:
         verbose_name = "Listing"
         verbose_name_plural = "Listings"
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(price__gte=0), name="price_non_negative"
+            ),
+            models.CheckConstraint(
+                check=models.Q(quantity__gte=0), name="quantity_non_negative"
+            ),
+        ]
 
     def clean(self):
         if self.price < 0:
@@ -38,16 +46,13 @@ class Listing(BaseModel):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        super().save(*args, **kwargs)
 
         if self.is_out_of_stock():
             self.close_listings()
-            #super().save(*args, **kwargs)
         elif not self.is_out_of_stock() and not self.active:
             self.activate_listings()
-            #super().save(*args, **kwargs)
 
-        return self
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
