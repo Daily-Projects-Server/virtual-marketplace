@@ -1,11 +1,16 @@
 from django.db import models
+
 from core.models import BaseModel
 
 
 class Transaction(BaseModel):
-    buyer = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="buyer")
-    seller = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name="seller")
-    listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
+    buyer = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="buyer"
+    )
+    seller = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="seller"
+    )
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1, null=False)
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -14,24 +19,29 @@ class Transaction(BaseModel):
         verbose_name_plural = "Transactions"
 
     def __str__(self):
-        return f"{self.buyer.username} bought {self.quantity} of {self.listing.title} from {self.seller.username}"
+        return f"{self.buyer.email} bought {self.quantity} of {self.listing.title} from {self.seller.email}"
 
 
 class Cart(BaseModel):
-    buyer = models.ForeignKey('users.User', on_delete=models.CASCADE)
+    buyer = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Order"
         verbose_name_plural = "Orders"
 
     def __str__(self):
-        return f"{self.buyer.username}'s cart"
+        return f"{self.buyer.email}'s cart"
 
 
 class CartItem(BaseModel):
-    cart = models.ManyToManyField(to=Cart)
-    listings = models.ManyToManyField(to='listings.Listing')
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
     quantity = models.PositiveSmallIntegerField(default=1, null=False)
+
+    def __str__(self):
+        return (
+            f"{self.quantity} of {self.listing.title} in {self.cart.buyer.email}'s cart"
+        )
 
 
 class Coupon(BaseModel):
