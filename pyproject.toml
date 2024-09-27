@@ -1,0 +1,9 @@
+[tool.ruff]
+# Enable all rules by default
+lint.select = ["E", "F", "W", "C", "N", "Q", "B", "A"]
+# Exclude specific rules
+lint.ignore = ["E402", "E501"]
+# Apply Ruff only to the backend folder
+src = ["backend"]
+# Set line length to 88
+line-length = 88
