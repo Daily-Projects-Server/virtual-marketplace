@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.authentication import (
     SessionAuthentication,
     BasicAuthentication,
@@ -60,4 +60,4 @@ class ListingViewSet(viewsets.ModelViewSet):
         SessionAuthentication,
         BasicAuthentication,
     ]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
