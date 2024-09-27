@@ -12,14 +12,6 @@ os.environ["DJANGO_SETTINGS_MODULE"] = "virtual-marketplace.backend.api.settings
 
 User = get_user_model()
 
-pytest_plugins = [
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-]
-
 
 # Fixtures
 @pytest.fixture()
