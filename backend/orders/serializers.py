@@ -38,7 +38,7 @@ class CartItemSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError("Quantity cannot be less than 1")
 
         # Check if the cart exists
-        if cart and not cart:
+        if not cart:
             raise serializers.ValidationError("Cart does not exist")
 
         # Check if the item already exists in the cart (only for create operations)
@@ -53,11 +53,10 @@ class CartItemSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Cart does not belong to the user")
 
         # Check the listing
-        if listing:
-            if not listing:
-                raise serializers.ValidationError("Listing does not exist")
-            elif not listing.active:
-                raise serializers.ValidationError("Listing is not active")
+        if not listing:
+            raise serializers.ValidationError("Listing does not exist")
+        elif not listing.active:
+            raise serializers.ValidationError("Listing is not active")
 
         return attrs
 
