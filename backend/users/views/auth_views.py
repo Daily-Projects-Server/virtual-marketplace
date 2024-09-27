@@ -1,25 +1,23 @@
 import logging
 from datetime import datetime
 
-
-from django.views.decorators.debug import sensitive_post_parameters
 from django.utils.decorators import method_decorator
-from django.conf import settings
-from rest_framework import serializers
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.debug import sensitive_post_parameters
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiExample, OpenApiResponse, extend_schema
+from rest_framework import serializers, status
 from rest_framework.exceptions import APIException
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
-from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
-from drf_spectacular.utils import extend_schema, OpenApiResponse, OpenApiExample
-from drf_spectacular.types import OpenApiTypes
 
-from ..serializers import LoginSerializer, RegisterSerializer
 from core.common import responseMessages
 from core.common.globalFunctions import get_refresh_token
+
+from ..serializers import LoginSerializer, RegisterSerializer
 
 logger = logging.getLogger("django")
 
@@ -81,7 +79,7 @@ class LoginView(APIView):
     permission_classes = []
     authentication_classes = []
 
-    def post(self, request, format=None):
+    def post(self, request):
         try:
             serializer = LoginSerializer(
                 data=request.data, context={"request": request}
@@ -165,7 +163,7 @@ class RegisterView(APIView):
     permission_classes = []
     authentication_classes = []
 
-    def post(self, request, format=None):
+    def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -238,13 +236,13 @@ class RefreshTokenView(TokenRefreshView):
             try:
                 serializer.is_valid(raise_exception=True)
             except TokenError as e:
-                raise InvalidToken(e.args[0])
+                raise InvalidToken(e.args[0]) from e
 
-            RESPONSE_DATA = {
+            response_data = {
                 "response": responseMessages.SUCCESS_RESPONSE_MESSAGE,
                 "access_token": serializer.validated_data.get("access"),
             }
-            response = Response(RESPONSE_DATA, status=status.HTTP_200_OK)
+            response = Response(response_data, status=status.HTTP_200_OK)
             response.set_cookie(
                 "refresh_token",
                 serializer.validated_data.get("refresh"),
@@ -301,9 +299,10 @@ class LogoutView(APIView):
             old_refresh.blacklist()
             # TODO: delete refresh token from cookie
             return Response(
-                {"detail": "User logged out successfully."}, status=status.HTTP_200_OK
+                {"detail": "User logged out successfully."},
+                status=status.HTTP_200_OK,
             )
 
         except APIException as exe:
             logger.error(str(exe), exc_info=True)
-            raise APIException("An internal error has occurred.")
+            raise APIException("An internal error has occurred.") from exe

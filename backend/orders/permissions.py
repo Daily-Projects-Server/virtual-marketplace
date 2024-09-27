@@ -1,11 +1,13 @@
 from rest_framework import permissions
+
 from listings.models import Listing
+
 from .models import Cart, CartItem
 
 
 class IsNotAllowedToDestroy(permissions.BasePermission):
     def has_permission(self, request, view):
-        return request.method != 'DELETE'
+        return request.method != "DELETE"
 
 
 class IsNotItemAlreadyInCart(permissions.BasePermission):
@@ -22,13 +24,12 @@ class IsNotItemAlreadyInCart(permissions.BasePermission):
             cart_id = request.data.get("cart")
             if not self.does_item_exist(listing_id, cart_id):
                 return False
-            
+
             # Retrieve the listing and cart objects
             listing = Listing.objects.get(id=listing_id)
             cart = Cart.objects.get(id=cart_id)
 
             # Check if the item is already in the cart
             return not CartItem.objects.filter(cart=cart, listing=listing).exists()
-        
+
         return True
-        

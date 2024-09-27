@@ -1,6 +1,7 @@
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
+
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,7 +18,9 @@ DEBUG = env.bool("DEBUG", default=False)
 
 # Database configuration
 DATABASES = {
-    "default": env.db(),  # This pulls the database configuration from the DATABASE_URL in .env
+    # This pulls the database configuration
+    # from the DATABASE_URL in .env
+    "default": env.db(),
 }
 
 env.escape_proxy = True
@@ -26,9 +29,11 @@ env.escape_proxy = True
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
-# This is safe and convenient for testing locally (Development Environment). In a production environment, you should
-# include the domain names or IP addresses where your application will be hosted. Using a wildcard is not recommended
-# for production environments because it makes your site more vulnerable to HTTP Host header attacks.
+# This is safe and convenient for testing locally (Development Environment).
+# In a production environment, you should include the domain names or IP
+# addresses where your application will be hosted. Using a wildcard is not
+# recommended for production environments because it makes your site more
+# vulnerable to HTTP Host header attacks.
 
 
 # Application definition
@@ -213,6 +218,9 @@ SPECTACULAR_SETTINGS = {
         {"name": "Favorites", "description": "Favorite management operations"},
         {"name": "Reviews", "description": "Review management operations"},
         {"name": "Listings", "description": "Listing management operations"},
-        {"name": "Transactions", "description": "Transaction management operations"},
+        {
+            "name": "Transactions",
+            "description": "Transaction management operations",
+        },
     ],
 }

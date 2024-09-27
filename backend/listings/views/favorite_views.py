@@ -1,10 +1,10 @@
-from rest_framework import viewsets
 from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiResponse,
     extend_schema,
     extend_schema_view,
-    OpenApiResponse,
-    OpenApiExample,
 )
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from ..models import Favorite
