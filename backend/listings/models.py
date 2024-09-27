@@ -30,19 +30,24 @@ class Listing(BaseModel):
     def close_listings(self):
         self.active = False
 
+    def is_out_of_stock(self):
+        return self.quantity == 0
+
     def activate_listings(self):
         self.active = True
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        instance = super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
-        if self.quantity == 0:
+        if self.is_out_of_stock():
             self.close_listings()
-        elif self.quantity > 0 and not self.active:
+            #super().save(*args, **kwargs)
+        elif not self.is_out_of_stock() and not self.active:
             self.activate_listings()
+            #super().save(*args, **kwargs)
 
-        return instance
+        return self
 
     def __str__(self):
         return self.title

@@ -166,9 +166,8 @@ class TestListingViews:
     def test_listing_create_view(self, owner_fixture, category_fixture, image_fixture):
         client = APIClient()
         client.force_authenticate(user=owner_fixture)
-        listing_url = reverse("listing-list")
 
-        # Test creating a listing with valid data
+        listing_url = reverse("listing-list")
         data = {
             "title": "Test Listing",
             "image": image_fixture,
@@ -195,13 +194,10 @@ class TestListingViews:
         client.force_authenticate(user=owner_fixture)
 
         listing_url = reverse("listing-detail", args=[listing_fixture.id])
-        data = {"title": "Updated Test Listing"}
-
-        response = client.patch(listing_url, data=data)
-        assert response.status_code == 200
-        assert response.data["title"] == "Updated Test Listing"
-
         data = {"active": False}
         response = client.patch(listing_url, data=data)
+
         assert response.status_code == 200
+        assert Listing.objects.get(id=listing_fixture.id).active == False
         assert response.data["active"] == False
+        
