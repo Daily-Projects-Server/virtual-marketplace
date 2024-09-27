@@ -8,7 +8,7 @@ from rest_framework import status
 
 from listings.models import Category, Listing
 
-os.environ["DJANGO_SETTINGS_MODULE"] = "virtual-marketplace.backend.api.settings"
+os.environ["DJANGO_SETTINGS_MODULE"] = "api.settings"
 
 User = get_user_model()
 
