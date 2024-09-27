@@ -25,7 +25,7 @@ jobs:
 
     - name: Run pytest
       env:
-        DJANGO_SETTINGS_MODULE: virtual-marketplace.backend.api.settings
+        DJANGO_SETTINGS_MODULE: api.settings
       run: |
         cd backend
         pytest
