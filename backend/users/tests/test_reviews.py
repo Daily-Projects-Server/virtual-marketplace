@@ -1,24 +1,11 @@
-# Remote imports
+# noqa: F401
 import pytest
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.test import APIClient
-from rest_framework_simplejwt.exceptions import TokenError
-from django.conf import settings
 
-# Local imports
-from listings.models import Listing, Category
-from orders.models import Cart
-from users.models import Settings
-from users.common_for_tests import (
-    User,
-    user_fixture,
-    superuser_fixture,
-    listing_fixture,
-    login,
-    logout,
-)
+from conftest import User, login, logout
+from listings.models import Category, Listing
 
 
 class TestReviewViews:

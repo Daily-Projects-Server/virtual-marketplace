@@ -56,6 +56,11 @@ Note that four `/` after `sqlite:` are mandatory
 
 Navigate to [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
+### IMPORTANT: Before pushing your code (Backend), run the following commands:
+1. Install pre-commit hooks
+> `pre-commit install`
+2. Run pre-commit checks
+> `pre-commit run`
 
 ### API Documentation
 

@@ -25,10 +25,10 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
 
         return self.create_user(email, password, **extra_fields)
 
@@ -43,7 +43,13 @@ class User(AbstractBaseUser, BaseModel):
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    settings = models.ForeignKey('Settings', on_delete=models.CASCADE, null=True, blank=True, unique=False)
+    settings = models.ForeignKey(
+        "Settings",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        unique=False,
+    )
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -72,15 +78,19 @@ class User(AbstractBaseUser, BaseModel):
         instance = super(User, self).save(*args, **kwargs)
 
         default_settings = Settings.objects.get(id=1)
-        fields = [field for field in Settings._meta.get_fields()
-                  if field.concrete
-                  and not field.many_to_many
-                  and field is not Settings._meta.pk]
+        fields = [
+            field
+            for field in Settings._meta.get_fields()
+            if field.concrete
+            and not field.many_to_many
+            and field is not Settings._meta.pk
+        ]
 
         # Check if the user's settings differ from the default settings
         fields_differ = any(
             getattr(self.settings, field.name) != getattr(default_settings, field.name)
-            for field in fields)
+            for field in fields
+        )
 
         # If the settings differ, create a new settings object for the user
         if fields_differ:
@@ -90,9 +100,8 @@ class User(AbstractBaseUser, BaseModel):
             self.settings = new_settings
             super(User, self).save(*args, **kwargs)
 
-
         # Create a cart for the user
-        if not hasattr(self, 'cart'):
+        if not hasattr(self, "cart"):
             cart = Cart.objects.create(buyer=self)
             self.cart = cart
 
@@ -119,7 +128,7 @@ class Address(BaseModel):
 
 class Favorite(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Favorite"
@@ -131,7 +140,7 @@ class Favorite(BaseModel):
 
 class Review(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    listing = models.ForeignKey('listings.Listing', on_delete=models.CASCADE)
+    listing = models.ForeignKey("listings.Listing", on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField()
     comment = models.TextField()
 
@@ -145,7 +154,9 @@ class Review(BaseModel):
 
 class Message(BaseModel):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
-    recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipient")
+    recipient = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="recipient"
+    )
     message = models.TextField()
 
     class Meta:
@@ -153,9 +164,11 @@ class Message(BaseModel):
         verbose_name_plural = "Messages"
 
     def __str__(self):
-        return (f"{self.sender.first_name} {self.sender.last_name} "
-                f"sent a message to {self.recipient.first_name} "
-                f"{self.recipient.last_name}")
+        return (
+            f"{self.sender.first_name} {self.sender.last_name} "
+            f"sent a message to {self.recipient.first_name} "
+            f"{self.recipient.last_name}"
+        )
 
 
 class Settings(BaseModel):

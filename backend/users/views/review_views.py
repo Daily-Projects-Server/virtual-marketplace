@@ -1,18 +1,16 @@
-# Rest
-from rest_framework import viewsets, permissions
 from drf_spectacular.utils import (
-    extend_schema,
-    extend_schema_view,
-    OpenApiResponse,
     OpenApiExample,
     OpenApiParameter,
+    OpenApiResponse,
     OpenApiTypes,
+    extend_schema,
+    extend_schema_view,
 )
+from rest_framework import permissions, viewsets
 
-# Local
-from ..permissions import IsAllowedToReview, IsAllowedToDestroyReview
-from ..serializers import ReviewSerializer
 from ..models import Review
+from ..permissions import IsAllowedToDestroyReview, IsAllowedToReview
+from ..serializers import ReviewSerializer
 
 
 @extend_schema_view(
