@@ -36,6 +36,20 @@ def category_fixture(request):
 
 
 @pytest.fixture()
+def image_fixture(request):
+    image = Image.new("RGB", (100, 100))
+    image_file = io.BytesIO()
+    image.save(image_file, format="JPEG")
+    image_file.seek(0)
+    image = SimpleUploadedFile(
+        name="test_image.jpg", content=image_file.read(), content_type="image/jpeg"
+    )
+
+    request.addfinalizer(image.file.close)
+    return image
+
+
+@pytest.fixture()
 def listing_fixture(request, owner_fixture, category_fixture):
     listing = Listing(
         title="Test Listing",
@@ -49,20 +63,6 @@ def listing_fixture(request, owner_fixture, category_fixture):
     listing.save()
     request.addfinalizer(listing.delete)
     return listing
-
-
-@pytest.fixture()
-def image_fixture(request):
-    image = Image.new("RGB", (100, 100))
-    image_file = io.BytesIO()
-    image.save(image_file, format="JPEG")
-    image_file.seek(0)
-    image = SimpleUploadedFile(
-        name="test_image.jpg", content=image_file.read(), content_type="image/jpeg"
-    )
-
-    request.addfinalizer(image.file.close)
-    return image
 
 
 class TestListingsModel:
@@ -191,3 +191,39 @@ class TestListingViews:
         assert response.status_code == 200
         assert Listing.objects.get(id=listing_fixture.id).active == False
         assert response.data["active"] == False
+
+    @pytest.mark.django_db
+    def test_listing_update_view(
+        self, owner_fixture, listing_fixture, image_fixture, category_fixture
+    ):
+        client = APIClient()
+        client.force_authenticate(user=owner_fixture)
+
+        listing_url = reverse("listing-detail", args=[listing_fixture.id])
+        data = {
+            "title": "Updated Listing",
+            "description": "Updated Description",
+            "image": image_fixture,
+            "price": 200.00,
+            "category": category_fixture.id,
+            "quantity": 20,
+            "owner": owner_fixture.id,
+        }
+        response = client.put(listing_url, data=data)
+        listing = Listing.objects.get(id=listing_fixture.id)
+        assert response.status_code == 200
+        assert listing.title == "Updated Listing"
+        assert response.data["title"] == "Updated Listing"
+
+        # Delete the image
+        delete_image(listing.image)
+
+    @pytest.mark.django_db
+    def test_listing_delete_view(self, owner_fixture, listing_fixture):
+        client = APIClient()
+        client.force_authenticate(user=owner_fixture)
+
+        listing_url = reverse("listing-detail", args=[listing_fixture.id])
+        response = client.delete(listing_url)
+        assert response.status_code == 204
+        assert Listing.objects.filter(id=listing_fixture.id).count() == 0
