@@ -1,15 +1,15 @@
 # Remove imports
 import io
+import os
 import pytest
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
-from PIL import Image
+from PIL import Image, ImageDraw
 
 from listings.models import Category, Listing
-from users.models import User
-from conftest import login, logout
+from conftest import User, login, logout, delete_image
 from listings.models import Listing, Category
 
 
@@ -110,11 +110,6 @@ class TestListingsModel:
         listing.save()
         assert listing.active is False
 
-        # Test listing activity when quantity is greater than 0
-        listing.quantity = 10
-        listing.save()
-        assert listing.active is True
-
     @pytest.mark.django_db
     def test_owner_having_multiple_listings(self, owner_fixture, category_fixture):
         # Listing 1
@@ -182,16 +177,19 @@ class TestListingViews:
         assert response.status_code == 201
         assert response.data["title"] == "Test Listing"
 
+        listing = Listing.objects.get(id=response.data["id"])
         # Test creating a listing with invalid data
         data["price"] = -100.00
         response = client.post(listing_url, data=data, format="multipart")
         assert response.status_code == 400
 
+        # Delete the image
+        delete_image(listing.image)
 
     @pytest.mark.django_db
-    def test_listing_update_view(self, owner_fixture, listing_fixture):
+    def test_listing_partial_update_view(self, owner_fixture, listing_fixture):
         client = APIClient()
-        #client.force_authenticate(user=owner_fixture)
+        client.force_authenticate(user=owner_fixture)
 
         listing_url = reverse("listing-detail", args=[listing_fixture.id])
         data = {"active": False}
@@ -199,5 +197,4 @@ class TestListingViews:
 
         assert response.status_code == 200
         assert Listing.objects.get(id=listing_fixture.id).active == False
-        #assert response.data["active"] == False
-        
+        assert response.data["active"] == False

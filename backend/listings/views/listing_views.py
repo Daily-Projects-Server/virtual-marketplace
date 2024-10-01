@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 from rest_framework.authentication import (
     BasicAuthentication,
     SessionAuthentication,
@@ -61,3 +62,16 @@ class ListingViewSet(viewsets.ModelViewSet):
         BasicAuthentication,
     ]
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        
+        if 'active' in serializer.validated_data:
+            instance.active = serializer.validated_data['active']
+            instance.save(update_fields=['active'])
+        else:
+            self.perform_update(serializer)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

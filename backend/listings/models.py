@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
@@ -47,10 +48,11 @@ class Listing(BaseModel):
     def save(self, *args, **kwargs):
         self.full_clean()
 
-        if self.is_out_of_stock():
-            self.close_listings()
-        elif not self.is_out_of_stock() and not self.active:
-            self.activate_listings()
+        if "update_fields" not in kwargs or "active" not in kwargs["update_fields"]:
+            if self.is_out_of_stock():
+                self.close_listings()
+            elif not self.is_out_of_stock() and not self.active:
+                self.activate_listings()
 
         super().save(*args, **kwargs)
 
