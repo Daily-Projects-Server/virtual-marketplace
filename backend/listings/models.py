@@ -45,17 +45,6 @@ class Listing(BaseModel):
     def activate_listings(self):
         self.active = True
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-
-        if "update_fields" not in kwargs or "active" not in kwargs["update_fields"]:
-            if self.is_out_of_stock():
-                self.close_listings()
-            elif not self.is_out_of_stock() and not self.active:
-                self.activate_listings()
-
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return self.title
 

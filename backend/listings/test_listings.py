@@ -3,6 +3,7 @@ import io
 import os
 import pytest
 from rest_framework.exceptions import ValidationError
+from django.db import IntegrityError
 from rest_framework.test import APIClient
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -97,18 +98,10 @@ class TestListingsModel:
         listing.quantity = -10
         with pytest.raises(ValidationError):
             listing.clean()
+
         listing.price = 100.00
         with pytest.raises(ValidationError):
-            listing.save()
-
-    @pytest.mark.django_db
-    def test_listing_save(self, listing_fixture):
-        listing = listing_fixture
-
-        # Testt listing activity when quantity is 0
-        listing.quantity = 0
-        listing.save()
-        assert listing.active is False
+            listing.clean()
 
     @pytest.mark.django_db
     def test_owner_having_multiple_listings(self, owner_fixture, category_fixture):
