@@ -8,7 +8,7 @@ from django.urls import reverse
 from listings.models import Listing
 from conftest import delete_image
 from listings.models import Listing
-from listings.tests.fixtures_listings import (
+from .fixtures_listings import (
     owner_fixture,
     category_fixture,
     image_fixture,
