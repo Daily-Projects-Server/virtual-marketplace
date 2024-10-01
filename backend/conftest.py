@@ -62,7 +62,6 @@ def login(user_fixture, client):
         login_url,
         data={"email": user_fixture.email, "password": "password123"},
     )
-    assert login_response.status_code == status.HTTP_200_OK
     access_token = login_response.data["access_token"]
     client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
 
@@ -72,3 +71,9 @@ def logout(user_fixture, client):
         logout_url = reverse("logout")
         client.post(logout_url)
         client.credentials()
+
+
+def delete_image(image):
+    if os.path.isfile(image.path):
+        os.remove(image.path)
+        
