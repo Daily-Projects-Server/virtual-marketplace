@@ -1,4 +1,3 @@
-from typing import Any
 from django.db import models
 from rest_framework.exceptions import ValidationError
 
@@ -22,10 +21,7 @@ class Listing(BaseModel):
         constraints = [
             models.CheckConstraint(
                 check=models.Q(price__gte=0), name="price_non_negative"
-            ),
-            models.CheckConstraint(
-                check=models.Q(quantity__gte=0), name="quantity_non_negative"
-            ),
+            )
         ]
 
     def clean(self):
@@ -39,6 +35,7 @@ class Listing(BaseModel):
     def close_listings(self):
         self.active = False
 
+    @property
     def is_out_of_stock(self):
         return self.quantity == 0
 

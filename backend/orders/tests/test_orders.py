@@ -2,15 +2,9 @@ import pytest
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-from conftest import User, login
+from conftest import User
 from listings.models import Category, Listing
 from orders.models import Cart, CartItem
-from .fixtures_orders import (
-    user_fixture,
-    listing_fixture,
-    cart_fixture,
-    cart_item_fixture,
-)
 
 
 # Test the CartItem model
@@ -33,11 +27,12 @@ class TestCart:
         assert Cart.objects.count() == 1
 
     @pytest.mark.django_db
-    def test_get_cart_items(
-        self, user_fixture, cart_fixture, listing_fixture, cart_item_fixture
-    ):
+    def test_get_cart_items(self, user_fixture, cart_fixture, listing_fixture):
         client = APIClient()
         client.force_authenticate(user_fixture)
+
+        # Create a cart item
+        CartItem.objects.create(quantity=1, cart=cart_fixture, listing=listing_fixture)
 
         # List
         cart_item_url = reverse("cart-item-list")
@@ -119,11 +114,20 @@ class TestCart:
         assert response.status_code == 204
 
     @pytest.mark.django_db
-    def test_update_cart_item(
-        self, user_fixture, cart_fixture, listing_fixture, cart_item_fixture
-    ):
+    def test_update_cart_item(self, user_fixture, cart_fixture, listing_fixture):
         client = APIClient()
         client.force_authenticate(user_fixture)
+
+        # Add the listing to the cart
+        cart_item_url = reverse("cart-item-list")
+        response = client.post(
+            cart_item_url,
+            {
+                "cart": cart_fixture.id,
+                "listing": listing_fixture.id,
+                "quantity": 1,
+            },
+        )
 
         # Retrieve the cart item
         cart_item = CartItem.objects.get(cart=cart_fixture, listing=listing_fixture)

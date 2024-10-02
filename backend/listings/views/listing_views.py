@@ -1,12 +1,12 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+from rest_framework import status, viewsets
 from rest_framework.authentication import (
     BasicAuthentication,
     SessionAuthentication,
     TokenAuthentication,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 
 from ..models import Listing
 from ..serializers import ListingSerializer
@@ -67,10 +67,10 @@ class ListingViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
-        
-        if 'active' in serializer.validated_data:
-            instance.active = serializer.validated_data['active']
-            instance.save(update_fields=['active'])
+
+        if "active" in serializer.validated_data:
+            instance.active = serializer.validated_data["active"]
+            instance.save(update_fields=["active"])
         else:
             self.perform_update(serializer)
 

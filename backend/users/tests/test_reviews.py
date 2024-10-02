@@ -1,4 +1,3 @@
-# noqa: F401
 import pytest
 from django.urls import reverse
 from rest_framework import status
@@ -61,8 +60,7 @@ class TestReviewViews:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     @pytest.mark.django_db
-    def test_retrieve_reviews(self):
-        client = APIClient()
+    def test_retrieve_reviews(self, client):
         review_url = reverse("review-list")
 
         # List reviews
