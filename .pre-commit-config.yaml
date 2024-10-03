@@ -1,31 +1,4 @@
-#default_stages: [commit]
-#repos:
-#  - repo: https://github.com/pre-commit/pre-commit-hooks
-#    rev: v4.6.0
-#    hooks:
-#      - id: check-builtin-literals
-#      - id: check-case-conflict
-#      - id: check-docstring-first
-#      - id: check-json
-#      - id: check-toml
-#      - id: check-xml
-#      - id: check-yaml
-#      - id: debug-statements
-#      - id: detect-private-key
-#      - id: end-of-file-fixer
-#      - id: trailing-whitespace
-#
-#  - repo: https://github.com/astral-sh/ruff-pre-commit
-#    rev: v0.6.8
-#    hooks:
-#      - id: ruff
-#        files: "^backend/"
-#        args: ["check", "--select", "I", "--fix", "--line-length=88"]
-#      - id: ruff-format
-#        files: "^backend/"
-#        args: [--line-length=88]
-#
-
+default_stages: [commit]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -47,7 +20,9 @@ repos:
     hooks:
       - id: ruff
         files: "^backend/"
-        args: ["--select", "I", "--fix", "--line-length=88"]
+        exclude: "^backend/.*/migrations/"
+        args: ["check", "--select", "I", "--fix", "--line-length=88"]
       - id: ruff-format
         files: "^backend/"
-        args: ["--line-length=88"]
+        exclude: "^backend/.*/migrations/"
+        args: [--line-length=88]
