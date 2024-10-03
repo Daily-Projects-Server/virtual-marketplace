@@ -20,7 +20,9 @@ repos:
     hooks:
       - id: ruff
         files: "^backend/"
+        exclude: "^backend/.*/migrations/"
         args: ["check", "--select", "I", "--fix", "--line-length=88"]
       - id: ruff-format
         files: "^backend/"
+        exclude: "^backend/.*/migrations/"
         args: [--line-length=88]

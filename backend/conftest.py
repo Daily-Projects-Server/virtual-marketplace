@@ -1,12 +1,13 @@
+import io
 import os
 
 import pytest
-from django.conf import settings  # noqa: F401
 from django.contrib.auth import get_user_model
-from django.urls import reverse
-from rest_framework import status
+from django.core.files.uploadedfile import SimpleUploadedFile
+from PIL import Image
 
 from listings.models import Category, Listing
+from orders.models import Cart
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "api.settings"
 
@@ -55,20 +56,37 @@ def listing_fixture(request):
     return listing
 
 
-# Authentication functions
-def login(user_fixture, client):
-    login_url = reverse("login")
-    login_response = client.post(
-        login_url,
-        data={"email": user_fixture.email, "password": "password123"},
+@pytest.fixture()
+def category_fixture(request):
+    category = Category.objects.create(
+        name="Test Category", description="Test Description"
     )
-    assert login_response.status_code == status.HTTP_200_OK
-    access_token = login_response.data["access_token"]
-    client.credentials(HTTP_AUTHORIZATION=f"Bearer {access_token}")
+    request.addfinalizer(category.delete)
+    return category
 
 
-def logout(user_fixture, client):
-    if user_fixture.is_authenticated:
-        logout_url = reverse("logout")
-        client.post(logout_url)
-        client.credentials()
+@pytest.fixture()
+def image_fixture(request):
+    image = Image.new("RGB", (100, 100))
+    image_file = io.BytesIO()
+    image.save(image_file, format="JPEG")
+    image_file.seek(0)
+    image = SimpleUploadedFile(
+        name="test_image.jpg", content=image_file.read(), content_type="image/jpeg"
+    )
+
+    request.addfinalizer(image.file.close)
+    return image
+
+
+@pytest.fixture()
+def cart_fixture(user_fixture):
+    return Cart.objects.get(buyer=user_fixture)
+
+
+# Helper functions
+
+
+def delete_image(image):
+    if os.path.isfile(image.path):
+        os.remove(image.path)

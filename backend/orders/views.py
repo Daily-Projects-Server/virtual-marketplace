@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Cart, CartItem, Coupon, Transaction
 from .permissions import IsNotAllowedToDestroy, IsNotItemAlreadyInCart
@@ -55,6 +56,7 @@ from .serializers import (
 class TransactionViewSet(viewsets.ModelViewSet):
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema_view(
@@ -101,7 +103,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    permission_classes = [IsNotAllowedToDestroy]
+    permission_classes = [IsNotAllowedToDestroy, IsAuthenticated]
 
 
 @extend_schema_view(
@@ -148,7 +150,7 @@ class CartViewSet(viewsets.ModelViewSet):
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
-    permission_classes = [IsNotItemAlreadyInCart]
+    permission_classes = [IsNotItemAlreadyInCart, IsAuthenticated]
 
 
 @extend_schema_view(
@@ -195,3 +197,4 @@ class CartItemViewSet(viewsets.ModelViewSet):
 class CouponViewSet(viewsets.ModelViewSet):
     queryset = Coupon.objects.all()
     serializer_class = CouponSerializer
+    permission_classes = [IsAuthenticated]

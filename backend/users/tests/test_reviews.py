@@ -1,10 +1,9 @@
-# noqa: F401
 import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from conftest import User, login, logout
+from conftest import User
 from listings.models import Category, Listing
 
 
@@ -29,7 +28,7 @@ class TestReviewViews:
         )
 
         # Authenticate the user
-        login(user_fixture, client)
+        client.force_authenticate(user_fixture)
 
         # Post a review with valid data
         response = client.post(review_url, data=review_data)
@@ -61,8 +60,7 @@ class TestReviewViews:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     @pytest.mark.django_db
-    def test_retrieve_reviews(self):
-        client = APIClient()
+    def test_retrieve_reviews(self, client):
         review_url = reverse("review-list")
 
         # List reviews
@@ -72,7 +70,7 @@ class TestReviewViews:
     @pytest.mark.django_db
     def test_update_review(self, user_fixture, listing_fixture):
         client = APIClient()
-        login(user_fixture, client)
+        client.force_authenticate(user_fixture)
 
         # Create a review
         review_url = reverse("review-list")
@@ -101,7 +99,7 @@ class TestReviewViews:
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
         # Update the review without authentication
-        logout(user_fixture, client)
+        client.logout()
         response = client.put(f'{review_url}{review["id"]}/', data=review_data)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
@@ -115,7 +113,7 @@ class TestReviewViews:
         )
 
         # Authenticate the user
-        login(user, client)
+        client.force_authenticate(user)
 
         # Create a review
         review_url = reverse("review-list")
@@ -133,12 +131,12 @@ class TestReviewViews:
         assert response.status_code == status.HTTP_204_NO_CONTENT
 
         # Delete the review without authentication
-        logout(user, client)
+        client.logout()
         response = client.delete(f'{review_url}{review["id"]}/')
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
         # Delete the review on own listing with different user
-        login(user_fixture, client)
+        client.force_authenticate(user_fixture)
         review_data["user"] = Listing.objects.get(id=review["listing"]).owner_id
         response = client.post(review_url, data=review_data)
         review = response.data
