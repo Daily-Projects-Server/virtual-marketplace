@@ -1,3 +1,7 @@
+@if (loadStatus.isLoading()) {
+  <p-progressSpinner />
+}
+
 <form appForm (submit)="submitLoginForm()" [formGroup]="form">
   <div>
     <label for="email">Email</label>
