@@ -1,0 +1,44 @@
+<form appForm (submit)="submitRegistrationForm()" [formGroup]="form">
+  <div>
+    <label for="email">Email</label>
+    <input pInputText type="text" placeholder="Email" id="email" formControlName="email" />
+    @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+      <small>Email is required</small>
+    }
+    @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+      <small>Email is invalid</small>
+    }
+  </div>
+
+  <div>
+    <label for="first_name">First Name</label>
+    <input pInputText type="text" placeholder="First Name" id="first_name" formControlName="firstName" />
+    @if (form.get('firstName')?.hasError('required') && form.get('firstName')?.touched) {
+      <small>First Name is required</small>
+    }
+  </div>
+
+  <div>
+    <label for="last_name">Last Name</label>
+    <input pInputText type="text" placeholder="Last Name" id="last_name" formControlName="lastName" />
+    @if (form.get('lastName')?.hasError('required') && form.get('lastName')?.touched) {
+      <small>Last Name is required</small>
+    }
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input pInputText type="password" placeholder="Password" id="password" formControlName="password" />
+    @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+      <small>Password is required</small>
+    }
+  </div>
+
+  <div>
+    <label for="confirm_password">Confirm Password</label>
+    <input pInputText type="password" placeholder="Confirm Password" id="confirm_password" formControlName="confirmPassword" />
+    @if (form.get('confirmPassword')?.hasError('required') && form.get('confirmPassword')?.touched) {
+      <small>Confirm Password is required</small>
+    }
+  </div>
+</form>
