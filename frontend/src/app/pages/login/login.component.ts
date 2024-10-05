@@ -3,7 +3,7 @@ import { FormComponent } from "../../forms";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { InputTextModule } from "primeng/inputtext";
 import { AuthService } from "../../api/auth.service";
-import { take } from "rxjs";
+import { catchError, EMPTY, take } from "rxjs";
 import { LoadStatusService } from "../../services/load-status.service";
 import { ProgressBarModule } from "primeng/progressbar";
 import { ProgressSpinnerModule } from "primeng/progressspinner";
@@ -32,20 +32,21 @@ export class LoginComponent {
     password: new FormControl('password', [Validators.required]),
   })
 
-  // todo: handle error messages from the server
-
   submitLoginForm() {
     this.form.markAllAsTouched();
     this.form.updateValueAndValidity();
 
     if (this.form.valid && this.form.value.email && this.form.value.password) {
-      console.log('Form is valid');
       this.loadStatus.setLoading();
       this.authApi.login(this.form.value.email, this.form.value.password).pipe(
         take(1),
+        catchError(() => {
+          this.loadStatus.setError();
+          return EMPTY;
+        })
       ).subscribe(() => this.loadStatus.setSuccess());
     } else {
-      console.log('Form is invalid');
+      console.error('Form is invalid');
     }
   }
 }
