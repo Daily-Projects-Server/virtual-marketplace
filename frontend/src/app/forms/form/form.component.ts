@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, input, output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, output } from "@angular/core";
 import { Button } from "primeng/button";
+import { LoadStatusService } from "../../services/load-status.service";
 
 @Component({
   selector: 'form[appForm]',
@@ -7,11 +8,18 @@ import { Button } from "primeng/button";
   imports: [
     Button
   ],
-  templateUrl: './form.component.html',
   styleUrl: './form.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <ng-content />
+    <p-button [label]="label()" (click)="submit.emit()" />
+    @if (loadStatus && loadStatus.isError()) {
+      <p>An error has occurred.</p>
+    }
+  `
 })
 export class FormComponent {
   label = input('Submit');
   submit = output();
+  loadStatus = inject(LoadStatusService, {optional: true});
 }
