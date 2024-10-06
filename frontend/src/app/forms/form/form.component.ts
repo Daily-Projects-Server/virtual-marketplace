@@ -12,8 +12,8 @@ import { LoadStatusService } from "../../services/load-status.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ng-content />
-    <p-button [label]="label()" (click)="submit.emit()" />
-    @if (loadStatus && loadStatus.isError()) {
+    <p-button [label]="label()" (click)="submit.emit()" [disabled]="loadStatus.isLoading()" />
+    @if (loadStatus.isError()) {
       <p>An error has occurred.</p>
     }
   `
@@ -21,5 +21,5 @@ import { LoadStatusService } from "../../services/load-status.service";
 export class FormComponent {
   label = input('Submit');
   submit = output();
-  loadStatus = inject(LoadStatusService, {optional: true});
+  loadStatus = inject(LoadStatusService);
 }
