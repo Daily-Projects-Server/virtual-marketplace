@@ -2,7 +2,7 @@
   <p-progressSpinner />
 }
 
-<form appForm (submit)="submitLoginForm()" [formGroup]="form">
+<form appForm (onSubmit)="submitLoginForm()" [formGroup]="form">
   <div>
     <label for="email">Email</label>
     <input pInputText type="text" placeholder="Email" id="email" formControlName="email" />
