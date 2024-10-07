@@ -12,13 +12,13 @@ class TransactionSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
-        fields = "__all__"
+        fields = ["id", "buyer"]
 
 
 class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
-        fields = "__all__"
+        fields = ["id", "listing", "cart", "quantity"]
 
     def validate(self, attrs):
         listing = attrs.get("listing")
@@ -72,4 +72,4 @@ class CartItemSerializer(serializers.ModelSerializer):
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
-        fields = "__all__"
+        fields = ["id", "code", "discount", "active"]
