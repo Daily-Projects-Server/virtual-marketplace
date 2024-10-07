@@ -28,8 +28,8 @@ export class LoginComponent {
   protected loadStatus = inject(LoadStatusService);
 
   form = new FormGroup({
-    email: new FormControl('chris@chrisperko.net', [Validators.required, Validators.email]),
-    password: new FormControl('password', [Validators.required]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required]),
   })
 
   submitLoginForm() {
