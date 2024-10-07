@@ -86,7 +86,7 @@ class UserSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ["id"]
+        fields = ["id", "user"]
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
