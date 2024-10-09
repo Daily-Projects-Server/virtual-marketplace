@@ -80,7 +80,32 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        fields = [
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "is_staff",
+            "is_superuser",
+            "created",
+            "modified",
+            "last_login",
+        ]
+        read_only_fields = [
+            "id",
+            "is_staff",
+            "is_superuser",
+            "created",
+            "modified",
+            "last_login",
+        ]
+
+
+class UserListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "first_name", "last_name", "email"]
+        read_only_fields = ["id"]
 
 
 class AddressSerializer(serializers.ModelSerializer):

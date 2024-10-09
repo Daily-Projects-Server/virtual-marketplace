@@ -37,8 +37,8 @@ __all__ = ["LoginView", "RegisterView", "RefreshTokenView"]
                 OpenApiExample(
                     "Successful Response",
                     value={
-                        "message": "User logged in successfully",
-                        "response": "OK",
+                        "message": "You have successfully logged in",
+                        "response": "Ok",
                         "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
                     },
                     status_codes=["200"],
@@ -55,6 +55,17 @@ __all__ = ["LoginView", "RegisterView", "RefreshTokenView"]
                         "email": ["This field is required."],
                         "password": ["This field is required."],
                     },
+                    status_codes=["400"],
+                ),
+            ],
+        ),
+        400: OpenApiResponse(
+            response=OpenApiTypes.OBJECT,
+            description="Bad request response",
+            examples=[
+                OpenApiExample(
+                    "Invalid Email",
+                    value={"email": ["Enter a valid email address."]},
                     status_codes=["400"],
                 ),
             ],
@@ -84,9 +95,16 @@ class LoginView(APIView):
             serializer = LoginSerializer(
                 data=request.data, context={"request": request}
             )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
             user = serializer.validated_data.get("user")
+            if not user:
+                return Response(
+                    {"detail": "No active account found with the given credentials"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
             refresh = RefreshToken.for_user(user)
 
             response_data = {
@@ -104,11 +122,11 @@ class LoginView(APIView):
             )
             return response
 
-        except APIException as exe:
+        except Exception as exe:
             logger.error(str(exe), exc_info=True)
             return Response(
                 {"detail": "An internal error has occurred. Please try again later."},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
 
@@ -152,6 +170,20 @@ class LoginView(APIView):
                 OpenApiExample(
                     "User Already Exists",
                     value={"email": ["User with this email already exists."]},
+                    status_codes=["400"],
+                ),
+                OpenApiExample(
+                    "Password Mismatch",
+                    value={
+                        "non_field_errors": [
+                            "Confirm password does not match with password"
+                        ]
+                    },
+                    status_codes=["400"],
+                ),
+                OpenApiExample(
+                    "Invalid Email",
+                    value={"email": ["Enter a valid email address."]},
                     status_codes=["400"],
                 ),
             ],
@@ -213,10 +245,9 @@ class RegisterView(APIView):
             description="Unauthorized response",
             examples=[
                 OpenApiExample(
-                    "Unauthorized",
+                    "Unauthorized access",
                     value={
-                        "detail": "Token is invalid or expired",
-                        "code": "token_not_valid",
+                        "detail": "Your access token has expired or is invalid. Please login again or refresh the token."
                     },
                     status_codes=["401"],
                 ),
@@ -287,6 +318,19 @@ class LogoutView(APIView):
                         "Error Response",
                         value={"detail": "Error message"},
                         status_codes=["400"],
+                    ),
+                ],
+            ),
+            401: OpenApiResponse(
+                response=OpenApiTypes.OBJECT,
+                description="Unauthorized response",
+                examples=[
+                    OpenApiExample(
+                        "Unauthorized access",
+                        value={
+                            "detail": "Your access token has expired or is invalid. Please login again or refresh the token."
+                        },
+                        status_codes=["401"],
                     ),
                 ],
             ),
