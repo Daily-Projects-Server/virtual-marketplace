@@ -1,0 +1,24 @@
+@if (loadStatus.isLoading()) {
+  <p-progressSpinner />
+}
+
+<form appForm (onSubmit)="submitLoginForm()" [formGroup]="form">
+  <div>
+    <label for="email">Email</label>
+    <input pInputText type="text" placeholder="Email" id="email" formControlName="email" />
+    @if (form.get('email')?.hasError('required') && form.get('email')?.touched) {
+      <small>Email is required</small>
+    }
+    @if (form.get('email')?.hasError('email') && form.get('email')?.touched) {
+      <small>Email is invalid</small>
+    }
+  </div>
+
+  <div>
+    <label for="password">Password</label>
+    <input pInputText type="password" placeholder="Password" id="password" formControlName="password" />
+    @if (form.get('password')?.hasError('required') && form.get('password')?.touched) {
+      <small>Password is required</small>
+    }
+  </div>
+</form>
